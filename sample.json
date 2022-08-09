@@ -1,0 +1,12 @@
+{
+    "brand": "QCY",
+    "type": "semi-in-ear",
+    "bluetooth": 5.0,
+    "price": 10,
+    "color": ["black", "white"],
+    "time": {
+        "music": "5 hours",
+        "charging": "1.5 hours"
+    },
+    "dustproof-and-waterproof": true
+}
