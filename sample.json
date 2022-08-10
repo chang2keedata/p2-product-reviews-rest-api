@@ -1,12 +1,19 @@
 {
-    "brand": "QCY",
+    "brand": "QCY T12",
     "type": "semi-in-ear",
-    "bluetooth": 5.0,
+    "bluetooth": 5.1,
     "price": 10,
     "color": ["black", "white"],
     "time": {
         "music": "5 hours",
         "charging": "1.5 hours"
     },
-    "dustproof-and-waterproof": true
+    "dustproof-and-waterproof": true,
+    "connectors": "type-c",
+    "review": [
+        {
+            "comments": "comfortable",
+            "date": "2022/07/17"
+        },
+    ]
 }
