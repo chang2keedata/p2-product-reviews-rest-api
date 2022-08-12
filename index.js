@@ -28,7 +28,7 @@ async function main() {
         })
     })
     
-    app.get('/recipes',async function(req,res){
+    app.get('/earphone',async function(req,res){
         let criteria = {};
         if(req.query.type) {
             criteria.type = {
@@ -54,12 +54,38 @@ async function main() {
             }
         }
 
-        let result = await db.collection('bluetooth').find(criteria, {
+        let result = await db.collection('earphone').find(criteria, {
             'projection': {
                 'brand': 1,
                 'color': 1
             }
         }).toArray();
+        res.status(200);
+        res.send(result);
+    })
+
+    app.put('/earphone/:id',async function(req,res){
+        let earphone = await db.collection('earphone').findOne({
+            '_id': ObjectId(req.params.id)
+        })
+
+        let result = await db.collection('earphone').updateOne({
+            '_id': ObjectId(req.params.id)
+        },{
+            '$set': {
+                'brand': req.body.brand ? req.body.brand : earphone.brand,
+                'type': req.body.type ? req.body.type : earphone.description,
+                'price': req.body.price ? req.body.price : earphone.price
+            }
+        })
+        res.status(200);
+        res.send(result);
+    })
+
+    app.delete('/earphone/:id',async function(req,res){
+        await db.collection('earphone').deleteOne({
+            '_id': ObjectId(req.params.id)
+        })
         res.status(200);
         res.send(result);
     })

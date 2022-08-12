@@ -3,7 +3,10 @@
     "type": "semi-in-ear",
     "bluetooth": 5.1,
     "price": 10,
-    "color": ["black", "white"],
+    "color": [
+        "black",
+        "white"
+    ],
     "time": {
         "music": "5 hours",
         "charging": "1.5 hours"
