@@ -90,6 +90,38 @@ async function main() {
         res.send(result);
     })
 
+    app.post('/earphone/:id/reviews',async function(req,res){
+        let result = await db.collection('earphone').updateOne({
+            '_id': ObjectId(req.params.id)
+        },{
+            '$push': {
+                'reviews': {
+                    '_id': ObjectId(),
+                    'email': req.body.email,
+                    'content': req.body.content,
+                    'rating': req.body.rating
+                }
+            }
+        })
+        res.status(200);
+        res.send(result);
+    })
+
+    app.get('/earphone/:id/reviews',async function(req,res){
+        let result = await db.collection('earphone').findOne({
+            '_id': ObjectId(req.params.id)
+        },{
+            'projection': {
+                '_id': 1,
+                'brand': 1,
+                'type': 1,
+                'reviews': 1
+            }
+        })
+        res.status(200);
+        res.send(result);
+    })
+
 }
 
 app.listen(3000, function () {
