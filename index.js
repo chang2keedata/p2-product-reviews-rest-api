@@ -95,11 +95,11 @@ async function main() {
             '_id': ObjectId(req.params.id)
         },{
             '$push': {
-                'reviews': {
+                'review': {
                     '_id': ObjectId(),
                     'email': req.body.email,
-                    'content': req.body.content,
-                    'rating': req.body.rating
+                    'comment': req.body.content,
+                    'date': req.body.date
                 }
             }
         })
@@ -115,13 +115,50 @@ async function main() {
                 '_id': 1,
                 'brand': 1,
                 'type': 1,
-                'reviews': 1
+                'review': 1
             }
         })
         res.status(200);
         res.send(result);
     })
 
+    app.put('/earphone/:id/reviews/:reviewid',async function(req,res){
+        let review = await db.collection('earphone').findOne({
+            '_id': ObjectId(req.params.id),
+            'review._id': ObjectId(req.params.reviewid)
+        },{
+            'projection': {
+                'review.$': 1,
+            }
+        })
+
+        let result = await db.collection('earphone').updateOne({
+            '_id': ObjectId(req.params.id),
+            'review._id': ObjectId(req.params.reviewid)
+        },{
+            '$set': {
+                'review.$.email': req.body.email ? req.body.email : review.email,
+                'review.$.content': req.body.content ? req.body.content : review.content,
+                'review.$.date': req.body.date ? new Date(req.body.date) : new Date();
+            }
+        })
+        res.status(200);
+        res.send(result);
+    })
+
+    app.delete('/earphone/:id/reviews/:reviewid',async function(req,res){
+        let result = await db.collection('earphone').deleteOne({
+            '_id': ObjectId(req.params.id)
+        },{
+            '$pull': {
+                'review': {
+                    '_id': ObjectId(req.params.reviewid)
+                }
+            }
+        })
+        res.status(200);
+        res.send(result);
+    })
 }
 
 app.listen(3000, function () {

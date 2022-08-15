@@ -3,20 +3,40 @@
     "type": "semi-in-ear",
     "bluetooth": 5.1,
     "price": 10,
+    "stock": 5,
     "color": [
         "black",
         "white"
     ],
     "time": {
         "music": "5 hours",
-        "charging": "1.5 hours"
+        "cable-charging": "1.5 hours",
+        "box-charging": "20 hours"
     },
     "dustproof-and-waterproof": true,
     "connectors": "type-c",
+    "engraving": true,
+    "sale": true,
     "review": [
         {
+            "email": "abc@abc.com",
             "comments": "comfortable",
             "date": "2022/07/17"
-        },
+        }
     ]
 }
+
+// title
+// type
+// description
+// length
+// format
+// tag
+// background music 
+// subtitle
+// quality
+// device used
+// human on screen
+// purpose
+
+
