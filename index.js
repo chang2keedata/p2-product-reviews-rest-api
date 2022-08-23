@@ -15,17 +15,18 @@ async function main() {
 
     const db = await connect(MONGO_URI, DB_NAME);
 
+    // ADD NEW PRODUCT
     app.post('/add', async function (req,res) {
         let result = await db.collection('earphone').insertOne({
             'brand': req.body.brand,
             'model': req.body.model,
             'type': req.body.type,
             'earbuds': req.body.earbuds,
-            'bluetooth': parseInt(req.body.bluetooth),
+            'bluetooth': parseFloat(req.body.bluetooth),
             'price': parseInt(req.body.price),
-            "sale": req.body.sale,
+            "stock": req.body.stock,
             'color': req.body.color,
-            'time': req.body.time,
+            'hours': req.body.hours,
             'dustWaterproof': req.body.dustWaterproof,
             'connectors': req.body.connectors,
         })
@@ -34,17 +35,35 @@ async function main() {
         });
     })
     
+    // SEARCH FOR PRODUCT
     app.get('/earphone',async function(req,res){
         let criteria = {};
+
         if(req.query.type) {
             criteria.type = {
                 '$regex': req.query.type, '$options': 'i'
             }
         }
 
-        if(req.query.connectors) {
-            criteria.connectors = {
-                '$regex': req.query.connectors, '$options': 'i'
+        if(req.query.hours) {
+            criteria['hours.music'] = {
+                '$not': {
+                    '$eq': parseInt(req.query.hours)
+                }
+            }
+        }
+
+        if(req.query.stock) {
+            criteria.stock = {
+                '$elemMatch': {
+                    'store': req.query.stock
+                }
+            }
+        }
+
+        if(req.query.color) {
+            criteria.color = {
+                '$in': [req.query.color]
             }
         }
 
@@ -67,8 +86,9 @@ async function main() {
                 'type': 1,
                 'bluetooth': 1,
                 'price': 1,
+                'stock': 1,
                 'color': 1,
-                'time': 1,
+                'hours': 1,
                 'dustWaterproof': 1,
                 'connectors': 1
             }
@@ -76,6 +96,7 @@ async function main() {
         res.status(200).send(result);
     })
 
+    //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',async function(req,res){
         let earphone = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
@@ -91,9 +112,9 @@ async function main() {
                 'earbuds': req.body.earbuds ? req.body.earbuds : earphone.earbuds,
                 'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
                 'price': req.body.price ? req.body.price : earphone.price,
-                'sale': req.body.sale ? req.body.sale : earphone.sale,
+                'stock': req.body.stock ? req.body.stock : earphone.stock,
                 'color': req.body.color ? req.body.color : earphone.color,
-                'time': req.body.time ? req.body.time : earphone.time,
+                'hours': req.body.hours ? req.body.hours : earphone.hours,
                 'dustWaterproof': req.body.dustWaterproof ? req.body.dustWaterproof : earphone.dustWaterproof,
                 'connectors': req.body.connectors ? req.body.connectors : earphone.connectors
             }
@@ -103,6 +124,7 @@ async function main() {
         });
     })
 
+    // DELETE PRODUCT
     app.delete('/earphone/:id',async function(req,res){
         await db.collection('earphone').deleteOne({
             '_id': ObjectId(req.params.id)
@@ -112,6 +134,7 @@ async function main() {
         });
     })
 
+    // REVIEW PRODUCT
     app.post('/earphone/:id/reviews',async function(req,res){
         let result = await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
@@ -121,6 +144,7 @@ async function main() {
                     '_id': ObjectId(),
                     'email': req.body.email,
                     'comment': req.body.content,
+                    'rating': req.body.rating,
                     'date': req.body.date
                 }
             }

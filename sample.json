@@ -5,15 +5,18 @@
     "earbuds": false,
     "bluetooth": 5.1,
     "price": 10,
-    "sale": true,
+    "stock": [
+        {"store": "bugis", "qty": 10},
+        {"store": "bedok", "qty": 5}
+    ],
     "color": [
         "black",
         "white"
     ],
-    "time": {
-        "music": "5 hours",
-        "cable-charging": "1.5 hours",
-        "box-charging": "20 hours"
+    "hours": {
+        "music": 5,
+        "cable-charging": 2,
+        "box-charging": 20
     },
     "dustWaterproof": true,
     "connectors": "type-c",
@@ -25,6 +28,30 @@
             "date": "2022/07/17"
         }
     ]
+},
+{
+    "brand": "Lenovo",
+    "model": "P1",
+    "type": "on-ear",
+    "earbuds": false,
+    "bluetooth": 5.2,
+    "price": 15,
+    "stock": [
+        {"store": "bugis", "qty": 20},
+        {"store": "bedok", "qty": 10}
+    ],
+    "color": [
+        "black",
+        "white",
+        "blue"
+    ],
+    "hours": {
+        "music": 4,
+        "cable-charging": 2,
+        "box-charging": 18
+    },
+    "dustWaterproof": true,
+    "connectors": "type-c"
 }
 
 // title
