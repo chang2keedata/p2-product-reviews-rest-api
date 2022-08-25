@@ -4,12 +4,19 @@ const { connect } = require('./MongoUtil');
 const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const app = express();
+const jwt = require('jsonwebtoken');
+const Joi = require('joi');
 
 app.use(express.json());
 app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
+
+const signupSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+})
 
 function checkIfAuthenticationJWT(req,res,next) {
     if(req.headers.authorization) {
@@ -49,7 +56,7 @@ async function main() {
             'connectors': req.body.connectors,
         })
         res.status(200).json({
-            status: 200
+            'status': 200
         });
     })
     
@@ -161,14 +168,15 @@ async function main() {
                 'review': {
                     '_id': ObjectId(),
                     'email': req.body.email,
-                    'comment': req.body.content,
+                    'comments': req.body.content,
                     'rating': req.body.rating,
                     'date': new Date()
                 }
             }
         })
-        res.status(200);
-        res.send(result);
+        res.status(200).json({
+            'status': 200
+        })
     })
 
     // GET A REVIEW
@@ -183,8 +191,7 @@ async function main() {
                 'review': 1
             }
         })
-        res.status(200);
-        res.send(result);
+        res.status(200).send(result);
     })
 
     // EDIT THE REVIEW
@@ -209,8 +216,9 @@ async function main() {
                 'review.$.date': req.body.date ? new Date(req.body.date) : new Date()
             }
         })
-        res.status(200);
-        res.send(result);
+        res.status(200).json({
+            'message': 'Updated succesfully'
+        });
     })
 
     // DELETE REVIEW
@@ -224,13 +232,20 @@ async function main() {
                 }
             }
         })
-        res.status(200);
-        res.send(result);
+        res.status(200).json({
+            'message': 'Deleted succesfully'
+        });
     })
 
     // SIGNUP - ADD NEW USER
     app.post('/user',async function(req,res){
-        await db.collection('users').insertOne({
+        const { error, value } = signupSchema.validate(req.body);
+        if(error) {
+            console.log(error);
+            return res.send(error.details[0].message)
+        }
+
+        await db.collection('user').insertOne({
             'username': req.body.username,
             'firstname': req.body.firstname,
             'lastname': req.body.lastname,
@@ -242,11 +257,11 @@ async function main() {
 
     // LOGIN
     app.post('/login',async function(req,res){
-        let users = await db.collection('users').findOne({
+        let user = await db.collection('user').findOne({
             'email': req.body.email,
             'password': req.body.password
         })
-        if(users) {
+        if(user) {
             let token = jwt.sign({
                 'username': req.body.username,
                 'firstname': req.body.firstname,
@@ -264,20 +279,22 @@ async function main() {
 
     // UPDATE PROFILE
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
-        let student = await db.collection('users').findOne({
+        let user = await db.collection('user').findOne({
             '_id': ObjectId(req.params.id)
         })
 
-        let result = await db.collection('users').updateOne({
+        let result = await db.collection('user').updateOne({
             '_id': ObjectId(req.params.id)
         },{
             '$set': {
-                'username': req.body.username ? req.body.username : student.username,
-                'firstname': req.body.firstname ? req.body.firstname : student.firstname,
-                'firstname': req.body.firstname ? req.body.firstname : student.firstname
+                'username': req.body.username ? req.body.username : user.username,
+                'firstname': req.body.firstname ? req.body.firstname : user.firstname,
+                'lastname': req.body.lastname ? req.body.lastname : user.lastname
             }
         })
-        res.sendStatus(200);
+        res.status(200).json({
+            'message': 'Updated succesfully'
+        });
     })
 
 }
