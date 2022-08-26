@@ -5,18 +5,13 @@ const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const app = express();
 const jwt = require('jsonwebtoken');
-const Joi = require('joi');
+const { validateSignup, validateLogin, validateUserUpdate, validateProduct } = require('./validator');
 
 app.use(express.json());
 app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
-
-const signupSchema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).required(),
-})
 
 function checkIfAuthenticationJWT(req,res,next) {
     if(req.headers.authorization) {
@@ -42,6 +37,10 @@ async function main() {
 
     // ADD NEW PRODUCT
     app.post('/add', async function (req,res) {
+        // VALIDATE INPUT
+        const { error, value } = validateProduct(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         await db.collection('earphone').insertOne({
             'brand': req.body.brand,
             'model': req.body.model,
@@ -56,7 +55,7 @@ async function main() {
             'connectors': req.body.connectors,
         })
         res.status(200).json({
-            'status': 200
+            'message': 'Created successfully'
         });
     })
     
@@ -104,7 +103,7 @@ async function main() {
             }
         }
 
-        let result = await db.collection('earphone').find(criteria, {
+        const result = await db.collection('earphone').find(criteria, {
             'projection': {
                 'brand': 1,
                 'model': 1,
@@ -123,9 +122,13 @@ async function main() {
 
     //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',async function(req,res){
-        let earphone = await db.collection('earphone').findOne({
+        const earphone = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
         })
+
+        // VALIDATE INPUT
+        const { error, value } = validateProduct(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
 
         await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
@@ -155,13 +158,13 @@ async function main() {
             '_id': ObjectId(req.params.id)
         })
         res.status(200).json({
-            'message': 'deleted successfully'
+            'message': 'Deleted successfully'
         });
     })
 
     // ADD PRODUCT REVIEW 
     app.post('/earphone/:id/review',async function(req,res){
-        let result = await db.collection('earphone').updateOne({
+        await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
         },{
             '$push': {
@@ -175,13 +178,13 @@ async function main() {
             }
         })
         res.status(200).json({
-            'status': 200
+            'message': 'Created successfully'
         })
     })
 
     // GET A REVIEW
     app.get('/earphone/:id/review',async function(req,res){
-        let result = await db.collection('earphone').findOne({
+        const result = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
         },{
             'projection': {
@@ -196,7 +199,7 @@ async function main() {
 
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',async function(req,res){
-        let review = await db.collection('earphone').findOne({
+        const review = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id),
             'review._id': ObjectId(req.params.reviewid)
         },{
@@ -205,7 +208,7 @@ async function main() {
             }
         })
 
-        let result = await db.collection('earphone').updateOne({
+        const result = await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id),
             'review._id': ObjectId(req.params.reviewid)
         },{
@@ -223,7 +226,7 @@ async function main() {
 
     // DELETE REVIEW
     app.delete('/earphone/:id/review/:reviewid',async function(req,res){
-        let result = await db.collection('earphone').deleteOne({
+        const result = await db.collection('earphone').deleteOne({
             '_id': ObjectId(req.params.id)
         },{
             '$pull': {
@@ -239,11 +242,17 @@ async function main() {
 
     // SIGNUP - ADD NEW USER
     app.post('/user',async function(req,res){
-        const { error, value } = signupSchema.validate(req.body);
-        if(error) {
-            console.log(error);
-            return res.send(error.details[0].message)
-        }
+        // VALIDATE INPUT
+        const { error, value } = validateSignup(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+        
+        // CHECK EXISTING EMAIL
+        const emailExist = await db.collection('user').findOne({
+            'email': req.body.email
+        })
+        if(emailExist) return res.status(400).json({
+            'message': `${req.body.email} is already been registered`
+        })
 
         await db.collection('user').insertOne({
             'username': req.body.username,
@@ -251,18 +260,27 @@ async function main() {
             'lastname': req.body.lastname,
             'email': req.body.email,
             'password': req.body.password,
+            'comfirmPassword': req.body.comfirmPassword
         })
-        res.sendStatus(201);
+        res.status(201).json({
+            'message': 'Created successfully'
+        });
     })
 
     // LOGIN
     app.post('/login',async function(req,res){
-        let user = await db.collection('user').findOne({
+        // VALIDATE INPUT
+        const { error, value } = validateLogin(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
+        const user = await db.collection('user').findOne({
             'email': req.body.email,
             'password': req.body.password
         })
+
+        // DISTRIBUTE TOKEN
         if(user) {
-            let token = jwt.sign({
+            const token = jwt.sign({
                 'username': req.body.username,
                 'firstname': req.body.firstname,
                 'lastname': req.body.lastname
@@ -279,11 +297,15 @@ async function main() {
 
     // UPDATE PROFILE
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
-        let user = await db.collection('user').findOne({
+        // VALIDATE INPUT\
+        const { error, value } = validateUserUpdate(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+        
+        const user = await db.collection('user').findOne({
             '_id': ObjectId(req.params.id)
         })
 
-        let result = await db.collection('user').updateOne({
+        await db.collection('user').updateOne({
             '_id': ObjectId(req.params.id)
         },{
             '$set': {
@@ -296,7 +318,6 @@ async function main() {
             'message': 'Updated succesfully'
         });
     })
-
 }
 main();
 

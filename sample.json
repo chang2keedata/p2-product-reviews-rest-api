@@ -15,8 +15,8 @@
     ],
     "hours": {
         "music": 5,
-        "cable-charging": 2,
-        "box-charging": 20
+        "cableCharging": 2,
+        "boxCharging": 20
     },
     "dustWaterproof": true,
     "connectors": "type-c",
@@ -53,18 +53,4 @@
     "dustWaterproof": true,
     "connectors": "type-c"
 }
-
-// title
-// type
-// description
-// length
-// format
-// tag
-// background music 
-// subtitle
-// quality
-// device used
-// human on screen
-// purpose
-
 
