@@ -42,8 +42,7 @@ async function main() {
         if(error) return res.status(422).json((error.details).map(e => e.message));
 
         await db.collection('earphone').insertOne({
-            'brand': req.body.brand,
-            'model': req.body.model,
+            'brandModel': req.body.brandModel,
             'type': req.body.type,
             'earbuds': req.body.earbuds,
             'bluetooth': parseFloat(req.body.bluetooth),
@@ -105,8 +104,7 @@ async function main() {
 
         const result = await db.collection('earphone').find(criteria, {
             'projection': {
-                'brand': 1,
-                'model': 1,
+                'brandModel': 1,
                 'type': 1,
                 'bluetooth': 1,
                 'price': 1,
@@ -134,8 +132,7 @@ async function main() {
             '_id': ObjectId(req.params.id)
         },{
             '$set': {
-                'brand': req.body.brand ? req.body.brand : earphone.brand,
-                'model': req.body.model ? req.body.model : earphone.model,
+                'brandModel': req.body.brandModel ? req.body.brandModel : earphone.brandModel,
                 'type': req.body.type ? req.body.type : earphone.type,
                 'earbuds': req.body.earbuds ? req.body.earbuds : earphone.earbuds,
                 'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
@@ -171,7 +168,7 @@ async function main() {
                 'review': {
                     '_id': ObjectId(),
                     'email': req.body.email,
-                    'comments': req.body.content,
+                    'comments': req.body.comments,
                     'rating': req.body.rating,
                     'date': new Date()
                 }
@@ -189,11 +186,28 @@ async function main() {
         },{
             'projection': {
                 '_id': 1,
-                'brand': 1,
-                'model': 1,
+                'brandModel': 1,
                 'review': 1
             }
         })
+        res.status(200).send(result);
+    })
+
+    // GET USER'S REVIEW FROM PRODUCT
+    app.get('/user/:id/review',async function(req,res){
+        const result = await db.collection('user').aggregate([{
+            $lookup: {
+                from: "earphone",
+                localField: "email",
+                foreignField: "review.email",
+                as: "userAllReviews"
+            }
+        },{
+            $project: {
+                'userAllReviews.brandModel': 1,
+                'userAllReviews.review': 1
+            }
+        }]).toArray();
         res.status(200).send(result);
     })
 

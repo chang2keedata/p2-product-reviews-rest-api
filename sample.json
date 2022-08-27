@@ -1,6 +1,5 @@
 {
-    "brand": "QCY",
-    "model": "T12",
+    "brandModel": "QCY T12",
     "type": "on-ear",
     "earbuds": false,
     "bluetooth": 5.1,
@@ -19,38 +18,21 @@
         "boxCharging": 20
     },
     "dustWaterproof": true,
-    "connectors": "type-c",
-    "review": [
-        {
-            "email": "abc@abc.com",
-            "comments": "comrtable",
-            "rating": 5,
-            "date": "2022/07/17"
-        }
-    ]
-},
-{
-    "brand": "Lenovo",
-    "model": "P1",
-    "type": "on-ear",
-    "earbuds": false,
-    "bluetooth": 5.2,
-    "price": 15,
-    "stock": [
-        {"store": "bugis", "qty": 20},
-        {"store": "bedok", "qty": 10}
-    ],
-    "color": [
-        "black",
-        "white",
-        "blue"
-    ],
-    "hours": {
-        "music": 4,
-        "cable-charging": 2,
-        "box-charging": 18
-    },
-    "dustWaterproof": true,
     "connectors": "type-c"
 }
 
+{
+    "username": "ohh",
+    "firstname": "bruce",
+    "lastname": "lee",
+    "email": "lee@lee.com",
+    "password": "123123",
+    "comfirmPassword": "123123",
+    "review": [
+        {
+            "email": "lee@lee.com",
+            "comments": "comrfotable",
+            "rating": 5
+        }
+    ]
+}
