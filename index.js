@@ -5,7 +5,7 @@ const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const app = express();
 const jwt = require('jsonwebtoken');
-const { validateProduct, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
+const { validateProduct, validateQuery, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
 
 app.use(express.json());
 app.use(cors());
@@ -45,8 +45,8 @@ async function main() {
             'brandModel': req.body.brandModel,
             'type': req.body.type,
             'earbuds': req.body.earbuds,
-            'bluetooth': parseFloat(req.body.bluetooth),
-            'price': parseInt(req.body.price),
+            'bluetooth': req.body.bluetooth,
+            'price': req.body.price,
             "stock": req.body.stock,
             'color': req.body.color,
             'hours': req.body.hours,
@@ -60,6 +60,10 @@ async function main() {
     
     // SEARCH FOR PRODUCT
     app.get('/earphone',async function(req,res){
+        // VALIDATE QUERY
+        const { error, value } = validateQuery(req.query);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         let criteria = {};
 
         if(req.query.type) {
@@ -76,7 +80,7 @@ async function main() {
             }
         }
 
-        if(req.query.stock) {
+        if(req.query.store) {
             criteria.stock = {
                 '$elemMatch': {
                     'store': req.query.stock
@@ -185,6 +189,10 @@ async function main() {
 
     // GET A REVIEW
     app.get('/earphone/:id/review',async function(req,res){
+        // VALIDATE PARAMS
+        const { error, value } = validateQuery(req.params);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         const result = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
         },{
@@ -199,6 +207,10 @@ async function main() {
 
     // GET USER'S REVIEW FROM PRODUCT
     app.get('/user/:id/review',async function(req,res){
+        // VALIDATE PARAMS
+        const { error, value } = validateQuery(req.params);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         const result = await db.collection('user').aggregate([{
             $lookup: {
                 from: "earphone",

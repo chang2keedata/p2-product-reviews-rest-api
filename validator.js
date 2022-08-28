@@ -48,8 +48,19 @@ const reviewSchema = Joi.object({
     rating:  positiveInt.less(6)
 })
 
+const querySchema = Joi.object({
+    type: Joi.string().regex(/^[a-z-]+$/),
+    store: Joi.string().regex(/^[a-z]+$/),
+    color: Joi.string().regex(/^[a-z]+$/),
+    hours: Joi.number(),
+    min_price: Joi.number(),
+    max_price: Joi.number(),
+    id: Joi.string().alphanum()
+})
+
 exports.validateSignup = validator(signupSchema);
 exports.validateLogin = validator(loginSchema);
 exports.validateUserUpdate = validator(userUpdateSchema);
 exports.validateProduct = validator(productSchema);
 exports.validateReview = validator(reviewSchema);
+exports.validateQuery = validator(querySchema);
