@@ -5,7 +5,7 @@ const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const app = express();
 const jwt = require('jsonwebtoken');
-const { validateSignup, validateLogin, validateUserUpdate, validateProduct } = require('./validator');
+const { validateProduct, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
 
 app.use(express.json());
 app.use(cors());
@@ -120,13 +120,13 @@ async function main() {
 
     //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',async function(req,res){
-        const earphone = await db.collection('earphone').findOne({
-            '_id': ObjectId(req.params.id)
-        })
-
         // VALIDATE INPUT
         const { error, value } = validateProduct(req.body);
         if(error) return res.status(422).json((error.details).map(e => e.message));
+
+        const earphone = await db.collection('earphone').findOne({
+            '_id': ObjectId(req.params.id)
+        })
 
         await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
@@ -161,6 +161,10 @@ async function main() {
 
     // ADD PRODUCT REVIEW 
     app.post('/earphone/:id/review',async function(req,res){
+        // VALIDATE INPUT
+        const { error, value } = validateReview(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
         },{
@@ -213,6 +217,10 @@ async function main() {
 
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',async function(req,res){
+        // VALIDATE INPUT
+        const { error, value } = validateReview(req.body);
+        if(error) return res.status(422).json((error.details).map(e => e.message));
+
         const review = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id),
             'review._id': ObjectId(req.params.reviewid)

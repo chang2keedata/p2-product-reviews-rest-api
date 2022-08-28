@@ -1,44 +1,51 @@
 const Joi = require('joi');
+const positiveInt = Joi.number().integer().positive().required();
+const positiveNum =  Joi.number().positive().required();
+const alphanum = Joi.string().alphanum().required();
+const email = Joi.string().trim().email().regex(/^[a-z-@._]+$/).required();
+const password = Joi.string().trim().min(6).required();
 
 const validator = (schema) => (payload) => schema.validate(payload, {
     abortEarly: false
-})
+});
 
 const productSchema = Joi.object({
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
     earbuds: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
-    bluetooth: Joi.number().less(6).required(),
-    price: Joi.number().required(),
-    stock: Joi.array().items(Joi.object({store: Joi.string(), qty: Joi.number()})),
+    bluetooth: positiveNum.less(6),
+    price: positiveNum,
+    stock: Joi.array().items(Joi.object({store: Joi.string(), qty: positiveInt})),
     color: Joi.array().items(Joi.string()).required(),
-    hours: Joi.object({music: Joi.number().integer(), cableCharging: Joi.number().integer(), boxCharging: Joi.number().integer()}).required(),
+    hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt}).required(),
     dustWaterproof: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
     connectors: Joi.string().regex(/^[a-z-]+$/).required(),
 })
 
 const signupSchema = Joi.object({
-    username: Joi.string().alphanum().required(),
-    firstname: Joi.string().alphanum().required(),
-    lastname: Joi.string().alphanum().required(),
-    email: Joi.string().trim().email().regex(/^[a-z-@._]+$/).required(),
-    password: Joi.string().trim().min(6).required(),
+    username: alphanum,
+    firstname: alphanum,
+    lastname: alphanum,
+    email: email,
+    password: password,
     comfirmPassword: Joi.ref('password')
 })
 
 const loginSchema = Joi.object({
-    email: Joi.string().trim().email().regex(/^[a-z-@._]+$/).required(),
-    password: Joi.string().trim().min(6).required(),
+    email: email,
+    password: password
 })
 
 const userUpdateSchema = Joi.object({
-    username: Joi.string().alphanum().required(),
-    firstname: Joi.string().alphanum().required(),
-    lastname: Joi.string().alphanum().required()
+    username: alphanum,
+    firstname: alphanum,
+    lastname: alphanum
 })
 
 const reviewSchema = Joi.object({
-    
+    email: email,
+    comments: Joi.string().required(),
+    rating:  positiveInt.less(6)
 })
 
 exports.validateSignup = validator(signupSchema);
