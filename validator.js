@@ -22,14 +22,15 @@ const productSchema = Joi.object({
     connectors: Joi.string().regex(/^[a-z-]+$/).required(),
 })
 
-const querySchema = Joi.object({
+const paramsQuerySchema = Joi.object({
     type: Joi.string().regex(/^[a-z-]+$/),
     store: Joi.string().regex(/^[a-z]+$/),
     color: Joi.string().regex(/^[a-z]+$/),
     hours: Joi.number(),
     min_price: Joi.number(),
     max_price: Joi.number(),
-    id: Joi.string().alphanum()
+    id: Joi.string().alphanum(),
+    reviewid: Joi.string().alphanum()
 })
 
 const reviewSchema = Joi.object({
@@ -48,8 +49,7 @@ const signupSchema = Joi.object({
 })
 
 const loginSchema = Joi.object({
-    email: email,
-    password: password
+    email: email
 })
 
 const userUpdateSchema = Joi.object({
@@ -63,4 +63,4 @@ exports.validateLogin = validator(loginSchema);
 exports.validateUserUpdate = validator(userUpdateSchema);
 exports.validateProduct = validator(productSchema);
 exports.validateReview = validator(reviewSchema);
-exports.validateQuery = validator(querySchema);
+exports.validateParamsQuery = validator(paramsQuerySchema);

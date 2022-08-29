@@ -5,7 +5,8 @@ const cors = require('cors');
 const { ObjectId } = require('mongodb');
 const app = express();
 const jwt = require('jsonwebtoken');
-const { validateProduct, validateQuery, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
+const { validateProduct, validateParamsQuery, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
+const bcrypt = require('bcryptjs');
 
 app.use(express.json());
 app.use(cors());
@@ -41,7 +42,7 @@ async function main() {
 
     // ADD NEW PRODUCT
     app.post('/add', async function (req,res) {
-        // VALIDATE INPUT
+        // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
         await db.collection('earphone').insertOne({
@@ -64,7 +65,7 @@ async function main() {
     // SEARCH FOR PRODUCT
     app.get('/earphone',async function(req,res){
         // VALIDATE QUERY
-        if(validator(validateQuery,req.query,res)) return res;
+        if(validator(validateParamsQuery,req.query,res)) return res;
 
         let criteria = {};
         if(req.query.type) {
@@ -125,7 +126,7 @@ async function main() {
 
     //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',async function(req,res){
-        // VALIDATE INPUT
+        // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
         const earphone = await db.collection('earphone').findOne({
@@ -155,6 +156,9 @@ async function main() {
 
     // DELETE PRODUCT
     app.delete('/earphone/:id',async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+       
         await db.collection('earphone').deleteOne({
             '_id': ObjectId(req.params.id)
         })
@@ -165,7 +169,7 @@ async function main() {
 
     // ADD PRODUCT REVIEW 
     app.post('/earphone/:id/review',async function(req,res){
-        // VALIDATE INPUT
+        // VALIDATE BODY
        if(validator(validateReview,req.body,res)) return res;
 
         await db.collection('earphone').updateOne({
@@ -189,7 +193,7 @@ async function main() {
     // GET A REVIEW
     app.get('/earphone/:id/review',async function(req,res){
         // VALIDATE PARAMS
-        if(validator(validateQuery,req.query,res)) return res;
+        if(validator(validateParamsQuery,req.params,res)) return res;
 
         const result = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
@@ -206,7 +210,7 @@ async function main() {
     // GET USER'S REVIEW FROM PRODUCT
     app.get('/user/:id/review',async function(req,res){
         // VALIDATE PARAMS
-        if(validator(validateQuery,req.query,res)) return res;
+        if(validator(validateParamsQuery,req.params,res)) return res;
         
         const result = await db.collection('user').aggregate([{
             $lookup: {
@@ -226,7 +230,7 @@ async function main() {
 
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',async function(req,res){
-        // VALIDATE INPUT
+        // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
         const review = await db.collection('earphone').findOne({
@@ -256,6 +260,9 @@ async function main() {
 
     // DELETE REVIEW
     app.delete('/earphone/:id/review/:reviewid',async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+        
         const result = await db.collection('earphone').deleteOne({
             '_id': ObjectId(req.params.id)
         },{
@@ -272,7 +279,7 @@ async function main() {
 
     // SIGNUP - ADD NEW USER
     app.post('/user',async function(req,res){
-        // VALIDATE INPUT
+        // VALIDATE BODY
         if(validator(validateSignup,req.body,res)) return res;
 
         // CHECK EXISTING EMAIL
@@ -283,13 +290,17 @@ async function main() {
             'message': `${req.body.email} is already been registered`
         })
 
+        // HASH THE PASSWORD
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
         await db.collection('user').insertOne({
             'username': req.body.username,
             'firstname': req.body.firstname,
             'lastname': req.body.lastname,
             'email': req.body.email,
-            'password': req.body.password,
-            'comfirmPassword': req.body.comfirmPassword
+            'password': hashedPassword,
+            'comfirmPassword': hashedPassword
         })
         res.status(201).json({
             'message': 'Created successfully'
@@ -298,13 +309,17 @@ async function main() {
 
     // LOGIN
     app.post('/login',async function(req,res){
-        // VALIDATE INPUT
+        // VALIDATE BODY
         if(validator(validateLogin,req.body,res)) return res;
 
         const user = await db.collection('user').findOne({
-            'email': req.body.email,
-            'password': req.body.password
+            'email': req.body.email
         })
+
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if(!validPassword) return res.status(401).json({
+            'message': 'Invalid email or password'
+        });
 
         // DISTRIBUTE TOKEN
         if(user) {
@@ -316,6 +331,7 @@ async function main() {
                 'expiresIn': '1h'
             })
             res.json({
+                'message': 'Logged in',
                 'accessToken': token
             })
         } else {
@@ -325,7 +341,7 @@ async function main() {
 
     // UPDATE PROFILE
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
-        // VALIDATE INPUT\
+        // VALIDATE BODY
         if(validator(validateUserUpdate,req.body,res)) return res;
         
         const user = await db.collection('user').findOne({
