@@ -31,15 +31,18 @@ function checkIfAuthenticationJWT(req,res,next) {
     }
 }
 
-async function main() {
+function validator(data,req,res) {
+    const { error, value } = data(req);
+    if(error) return res.status(422).json((error.details).map(e => e.message));
+}
 
+async function main() {
     const db = await connect(MONGO_URI, DB_NAME);
 
     // ADD NEW PRODUCT
     app.post('/add', async function (req,res) {
         // VALIDATE INPUT
-        const { error, value } = validateProduct(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateProduct,req.body,res)) return res;
 
         await db.collection('earphone').insertOne({
             'brandModel': req.body.brandModel,
@@ -61,11 +64,9 @@ async function main() {
     // SEARCH FOR PRODUCT
     app.get('/earphone',async function(req,res){
         // VALIDATE QUERY
-        const { error, value } = validateQuery(req.query);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateQuery,req.query,res)) return res;
 
         let criteria = {};
-
         if(req.query.type) {
             criteria.type = {
                 '$regex': req.query.type, '$options': 'i'
@@ -125,8 +126,7 @@ async function main() {
     //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',async function(req,res){
         // VALIDATE INPUT
-        const { error, value } = validateProduct(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateProduct,req.body,res)) return res;
 
         const earphone = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
@@ -166,8 +166,7 @@ async function main() {
     // ADD PRODUCT REVIEW 
     app.post('/earphone/:id/review',async function(req,res){
         // VALIDATE INPUT
-        const { error, value } = validateReview(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+       if(validator(validateReview,req.body,res)) return res;
 
         await db.collection('earphone').updateOne({
             '_id': ObjectId(req.params.id)
@@ -190,8 +189,7 @@ async function main() {
     // GET A REVIEW
     app.get('/earphone/:id/review',async function(req,res){
         // VALIDATE PARAMS
-        const { error, value } = validateQuery(req.params);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateQuery,req.query,res)) return res;
 
         const result = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id)
@@ -208,9 +206,8 @@ async function main() {
     // GET USER'S REVIEW FROM PRODUCT
     app.get('/user/:id/review',async function(req,res){
         // VALIDATE PARAMS
-        const { error, value } = validateQuery(req.params);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
-
+        if(validator(validateQuery,req.query,res)) return res;
+        
         const result = await db.collection('user').aggregate([{
             $lookup: {
                 from: "earphone",
@@ -230,8 +227,7 @@ async function main() {
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',async function(req,res){
         // VALIDATE INPUT
-        const { error, value } = validateReview(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateReview,req.body,res)) return res;
 
         const review = await db.collection('earphone').findOne({
             '_id': ObjectId(req.params.id),
@@ -277,9 +273,8 @@ async function main() {
     // SIGNUP - ADD NEW USER
     app.post('/user',async function(req,res){
         // VALIDATE INPUT
-        const { error, value } = validateSignup(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
-        
+        if(validator(validateSignup,req.body,res)) return res;
+
         // CHECK EXISTING EMAIL
         const emailExist = await db.collection('user').findOne({
             'email': req.body.email
@@ -304,8 +299,7 @@ async function main() {
     // LOGIN
     app.post('/login',async function(req,res){
         // VALIDATE INPUT
-        const { error, value } = validateLogin(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateLogin,req.body,res)) return res;
 
         const user = await db.collection('user').findOne({
             'email': req.body.email,
@@ -332,8 +326,7 @@ async function main() {
     // UPDATE PROFILE
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE INPUT\
-        const { error, value } = validateUserUpdate(req.body);
-        if(error) return res.status(422).json((error.details).map(e => e.message));
+        if(validator(validateUserUpdate,req.body,res)) return res;
         
         const user = await db.collection('user').findOne({
             '_id': ObjectId(req.params.id)

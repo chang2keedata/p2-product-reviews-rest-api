@@ -22,6 +22,22 @@ const productSchema = Joi.object({
     connectors: Joi.string().regex(/^[a-z-]+$/).required(),
 })
 
+const querySchema = Joi.object({
+    type: Joi.string().regex(/^[a-z-]+$/),
+    store: Joi.string().regex(/^[a-z]+$/),
+    color: Joi.string().regex(/^[a-z]+$/),
+    hours: Joi.number(),
+    min_price: Joi.number(),
+    max_price: Joi.number(),
+    id: Joi.string().alphanum()
+})
+
+const reviewSchema = Joi.object({
+    email: email,
+    comments: Joi.string().required(),
+    rating:  positiveInt.less(6)
+})
+
 const signupSchema = Joi.object({
     username: alphanum,
     firstname: alphanum,
@@ -40,22 +56,6 @@ const userUpdateSchema = Joi.object({
     username: alphanum,
     firstname: alphanum,
     lastname: alphanum
-})
-
-const reviewSchema = Joi.object({
-    email: email,
-    comments: Joi.string().required(),
-    rating:  positiveInt.less(6)
-})
-
-const querySchema = Joi.object({
-    type: Joi.string().regex(/^[a-z-]+$/),
-    store: Joi.string().regex(/^[a-z]+$/),
-    color: Joi.string().regex(/^[a-z]+$/),
-    hours: Joi.number(),
-    min_price: Joi.number(),
-    max_price: Joi.number(),
-    id: Joi.string().alphanum()
 })
 
 exports.validateSignup = validator(signupSchema);
