@@ -41,7 +41,7 @@ async function main() {
     const db = await connect(MONGO_URI, DB_NAME);
 
     // ADD NEW PRODUCT
-    app.post('/add', async function (req,res) {
+    app.post('/add',[checkIfAuthenticationJWT],async function (req,res) {
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
@@ -63,11 +63,14 @@ async function main() {
     })
     
     // SEARCH FOR PRODUCT
-    app.get('/earphone',async function(req,res){
+    app.get('/earphone',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
 
+        // PAGINATION
+        let { page = 1, limit = 2 } = req.query
         let criteria = {};
+
         if(req.query.type) {
             criteria.type = {
                 '$regex': req.query.type, '$options': 'i'
@@ -96,6 +99,12 @@ async function main() {
             }
         }
 
+        if(req.query.otherColor) {
+            criteria.color = {
+                '$nin': [req.query.otherColor]
+            }
+        }
+
         if(req.query.min_price) {
             criteria.price = {
                 '$gte': parseInt(req.query.min_price)
@@ -105,6 +114,12 @@ async function main() {
         if(req.query.max_price) {
             criteria.price = {
                 '$lte': parseInt(req.query.max_price)
+            }
+        }
+
+        if(req.query.rating) {
+            criteria['review.rating'] = {
+                '$ne': parseInt(req.query.rating)
             }
         }
 
@@ -118,14 +133,17 @@ async function main() {
                 'color': 1,
                 'hours': 1,
                 'dustWaterproof': 1,
-                'connectors': 1
+                'connectors': 1,
+                'review': 1
             }
-        }).toArray();
-        res.status(200).send(result);
+        }).limit(limit * 1).skip((page - 1) * limit).toArray();
+        res.status(200).json({
+            page, limit, result
+        });
     })
 
     //UPDATE DETAILS OF PRODUCT
-    app.put('/earphone/:id',async function(req,res){
+    app.put('/earphone/:id',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
@@ -155,7 +173,7 @@ async function main() {
     })
 
     // DELETE PRODUCT
-    app.delete('/earphone/:id',async function(req,res){
+    app.delete('/earphone/:id',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
        
@@ -168,7 +186,7 @@ async function main() {
     })
 
     // ADD PRODUCT REVIEW 
-    app.post('/earphone/:id/review',async function(req,res){
+    app.post('/earphone/:id/review',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
        if(validator(validateReview,req.body,res)) return res;
 
@@ -191,7 +209,7 @@ async function main() {
     })
 
     // GET A REVIEW
-    app.get('/earphone/:id/review',async function(req,res){
+    app.get('/earphone/:id/review',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
 
@@ -208,7 +226,7 @@ async function main() {
     })
 
     // GET USER'S REVIEW FROM PRODUCT
-    app.get('/user/:id/review',async function(req,res){
+    app.get('/user/:id/review',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
@@ -229,7 +247,7 @@ async function main() {
     })
 
     // EDIT THE REVIEW
-    app.put('/earphone/:id/review/:reviewid',async function(req,res){
+    app.put('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
@@ -259,7 +277,7 @@ async function main() {
     })
 
     // DELETE REVIEW
-    app.delete('/earphone/:id/review/:reviewid',async function(req,res){
+    app.delete('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
@@ -277,8 +295,8 @@ async function main() {
         });
     })
 
-    // SIGNUP - ADD NEW USER
-    app.post('/user',async function(req,res){
+    // SIGNUP USER
+    app.post('/user',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
         if(validator(validateSignup,req.body,res)) return res;
 
@@ -286,7 +304,7 @@ async function main() {
         const emailExist = await db.collection('user').findOne({
             'email': req.body.email
         })
-        if(emailExist) return res.status(400).json({
+        if(emailExist) return res.status(422).json({
             'message': `${req.body.email} is already been registered`
         })
 
@@ -303,21 +321,24 @@ async function main() {
             'comfirmPassword': hashedPassword
         })
         res.status(201).json({
-            'message': 'Created successfully'
+            'message': `${req.body.email} is registered successfully`
         });
     })
 
     // LOGIN
-    app.post('/login',async function(req,res){
+    app.post('/login',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
         if(validator(validateLogin,req.body,res)) return res;
 
         const user = await db.collection('user').findOne({
             'email': req.body.email
         })
+        if(!user) return res.status(422).json({
+            'message': 'Invalid email or password'
+        });
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if(!validPassword) return res.status(401).json({
+        if(!validPassword) return res.status(422).json({
             'message': 'Invalid email or password'
         });
 
@@ -339,7 +360,7 @@ async function main() {
         }
     })
 
-    // UPDATE PROFILE
+    // UPDATE USER
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
         if(validator(validateUserUpdate,req.body,res)) return res;
@@ -361,9 +382,27 @@ async function main() {
             'message': 'Updated succesfully'
         });
     })
+
+    // DELETE USER
+    app.delete('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+        
+        await db.collection('user').deleteOne({
+            '_id': ObjectId(req.params.id)
+        })
+        res.status(200).json({
+            'message': 'Deleted successfully'
+        });
+    })
+
+    // THE 404 ROUTE
+    app.all('*',function(req,res) {
+        res.status(404).end('Server could not find what was requested');
+    });
 }
 main();
 
 app.listen(3000, function () {
-    console.log('server started!!!')
+    console.log('Server started')
 })

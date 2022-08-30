@@ -2,7 +2,7 @@ const Joi = require('joi');
 const positiveInt = Joi.number().integer().positive().required();
 const positiveNum =  Joi.number().positive().required();
 const alphanum = Joi.string().alphanum().required();
-const email = Joi.string().trim().email().regex(/^[a-z-@._]+$/).required();
+const email = Joi.string().trim().email().regex(/^[a-z0-9-@._]+$/).required();
 const password = Joi.string().trim().min(6).required();
 
 const validator = (schema) => (payload) => schema.validate(payload, {
@@ -26,11 +26,15 @@ const paramsQuerySchema = Joi.object({
     type: Joi.string().regex(/^[a-z-]+$/),
     store: Joi.string().regex(/^[a-z]+$/),
     color: Joi.string().regex(/^[a-z]+$/),
+    otherColor: Joi.string().regex(/^[a-z&,]+$/),
     hours: Joi.number(),
     min_price: Joi.number(),
     max_price: Joi.number(),
-    id: Joi.string().alphanum(),
-    reviewid: Joi.string().alphanum()
+    rating: Joi.number().integer(),
+    id: Joi.string().alphanum().trim(),
+    reviewid: Joi.string().alphanum().trim(),
+    limit: Joi.number().integer().positive(),
+    page: Joi.number().integer().positive()
 })
 
 const reviewSchema = Joi.object({
@@ -49,7 +53,8 @@ const signupSchema = Joi.object({
 })
 
 const loginSchema = Joi.object({
-    email: email
+    email: email,
+    password: Joi.any()
 })
 
 const userUpdateSchema = Joi.object({

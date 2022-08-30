@@ -18,21 +18,21 @@
         "boxCharging": 20
     },
     "dustWaterproof": true,
-    "connectors": "type-c"
-}
-
-{
-    "username": "ohh",
-    "firstname": "bruce",
-    "lastname": "lee",
-    "email": "lee@lee.com",
-    "password": "123123",
-    "comfirmPassword": "123123",
+    "connectors": "type-c",
     "review": [
         {
-            "email": "lee@lee.com",
-            "comments": "comfortable",
+            "email": "",
+            "comments": "",
             "rating": 5
         }
     ]
+}
+
+{
+    "username": "",
+    "firstname": "",
+    "lastname": "",
+    "email": "",
+    "password": "",
+    "comfirmPassword": ""
 }
