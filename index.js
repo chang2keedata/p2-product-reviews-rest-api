@@ -57,7 +57,7 @@ async function main() {
             'dustWaterproof': req.body.dustWaterproof,
             'connectors': req.body.connectors,
         })
-        res.status(200).json({
+        res.status(201).json({
             'message': 'Created successfully'
         });
     })
@@ -203,7 +203,7 @@ async function main() {
                 }
             }
         })
-        res.status(200).json({
+        res.status(201).json({
             'message': 'Created successfully'
         })
     })
@@ -295,7 +295,7 @@ async function main() {
     })
 
     // SIGNUP USER
-    app.post('/user',[checkIfAuthenticationJWT],async function(req,res){
+    app.post('/signup',async function(req,res){
         // VALIDATE BODY
         if(validator(validateSignup,req.body,res)) return res;
 
