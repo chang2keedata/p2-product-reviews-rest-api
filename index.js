@@ -265,7 +265,6 @@ async function main() {
             'review._id': ObjectId(req.params.reviewid)
         },{
             '$set': {
-                'review.$.email': req.body.email ? req.body.email : review.email,
                 'review.$.comments': req.body.comments ? req.body.comments : review.comments,
                 'review.$.rating': req.body.rating ? req.body.rating : review.rating,
                 'review.$.date': req.body.date ? new Date(req.body.date) : new Date()

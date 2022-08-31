@@ -4,7 +4,7 @@
 This is a restful API designed for a project on earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku.
 
 ## Sample Document
-Earphone document
+Earphone template
 ```
 {
     "brandModel": <string>
@@ -20,7 +20,8 @@ Earphone document
     "review": <array of objects> i.e [{"email": <string>, "comments": <string>, "rating": <integer>}]
 }
 ```
-User document
+
+User template
 ```
 {
     "username": <string>,
@@ -42,18 +43,10 @@ User document
 **Parameters** | Description of the parameters in the body and the URL
 **Expected Response** | Expected JSON object for the response
 
+### Product routes
 |||
  --- | --- 
-**Title** | Login
-**Method** | POST
-**Endpoint Path** | /login
-**Body** | `{ "email": "<email>", "password": "<password>" }`
-**Parameters** | N/A
-**Expected Response** | `{ "message": "Logged in", "accessToken": "<JWT token>" }`
-
-|||
- --- | --- 
-**Title** | Retrieve all earphones with default pagination
+**Title** | Retrieve all products
 **Method** | GET
 **Endpoint Path** | /earphone
 **Body** | N/A
@@ -62,7 +55,7 @@ User document
 
 |||
  --- | --- 
-**Title** | Retrieve earphone with pagination
+**Title** | Retrieve result with pagination
 **Method** | GET
 **Endpoint Path** | /earphone?`parameter`
 **Body** | N/A
@@ -81,27 +74,120 @@ User document
 
 |||
  --- | --- 
-**Title** | Create new earphone post
+**Title** | Create a new product
 **Method** | POST
 **Endpoint Path** | /add
-**Body** | earphone document **without review**
+**Body** | earphone template **without review**
 **Parameters** | N/A
 **Expected Response** | `{ "message": "Created successfully" }`
 
 |||
  --- | --- 
-**Title** | Update an earphone post
+**Title** | Update a product
 **Method** | PUT
 **Endpoint Path** | /earphone/`:id`
-**Body** | earphone document **without review**
+**Body** | earphone template **without review**
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "message": "Updated successfully" }`
 
 |||
  --- | --- 
-**Title** | Delete an earphone post
+**Title** | Delete a product
 **Method** | Delete
 **Endpoint Path** | /earphone/`:id`
 **Body** | N/A
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "message": "Deleted successfully" }`
+
+### Review routes
+|||
+ --- | --- 
+**Title** | Create a review of product
+**Method** | POST
+**Endpoint Path** | /earphone/`:id`/review
+**Body** | **review only** in earphone template 
+**Parameters** | :id - _id of earphone object in document
+**Expected Response** | `{ "message": "Created successfully" }`
+
+|||
+ --- | --- 
+**Title** | Retrive a review of product
+**Method** | GET
+**Endpoint Path** | /earphone/`:id`/review
+**Body** | N/A 
+**Parameters** | :id - _id of earphone object in document
+**Expected Response** | `{ "_id": <string>, "brandModel": <string>, "review": <array of objects> }`
+
+|||
+ --- | --- 
+**Title** | Retrive all reviews of user
+**Method** | GET
+**Endpoint Path** | /user/`:id`/review
+**Body** | N/A 
+**Parameters** | :id - _id of user object in document
+**Expected Response** | `[{ "_id": <string>, "userAllReviews": <array of objects> i.e "brandModel": <string>, "review": <array of objects> }]`
+
+|||
+ --- | --- 
+**Title** | Update a review of product
+**Method** | PUT 
+**Endpoint Path** | /earphone/`:id`/review/`:reviewid`
+**Body** | **review without email** in earphone template
+**Parameters** | :id - _id of earphone object in document, :reviewid - _id of earphone project in document
+**Expected Response** | `{ "message": "Updated successfully" }`
+
+|||
+ --- | --- 
+**Title** | Delete a review of product
+**Method** | DELETE 
+**Endpoint Path** | /earphone/`:id`/review/`:reviewid`
+**Body** | N/A
+**Parameters** | :id - _id of earphone object in document, :reviewid - _id of earphone project in document
+**Expected Response** | `{ "message": "Deleted successfully" }`
+
+## User routes
+|||
+ --- | --- 
+**Title** | Sign up
+**Method** | POST
+**Endpoint Path** | /signup
+**Body** | user template
+**Parameters** | N/A
+**Expected Response** | `{ "message": "<email> is registred successfully" }`
+
+|||
+ --- | --- 
+**Title** | Login
+**Method** | POST
+**Endpoint Path** | /login
+**Body** | `{ "email": "<email>", "password": "<password>" }`
+**Parameters** | N/A
+**Expected Response** | `{ "message": "Logged in", "accessToken": "<JWT token>" }`
+
+|||
+ --- | --- 
+**Title** | Update a user
+**Method** | PUT
+**Endpoint Path** | /user/`:id`
+**Body** | user template **without email, password, and comfirmPassword**
+**Parameters** | :id - _id of user object in document
+**Expected Response** | `{ "message": "Updated successfully" }`
+
+|||
+ --- | --- 
+**Title** | Delete a user
+**Method** | Delete
+**Endpoint Path** | /user/`:id`
+**Body** | N/A
+**Parameters** | :id - _id of user object in document
+**Expected Response** | `{ "message": "Deleted successfully" }`
+
+## Other route
+|||
+ --- | --- 
+**Title** | Redirect not found pages
+**Method** | ALL
+**Endpoint Path** | N/A
+**Body** | N/A
+**Parameters** | N/A
+**Expected Response** | `Server could not find what was requested`
