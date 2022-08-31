@@ -17,7 +17,7 @@ const productSchema = Joi.object({
     price: positiveNum,
     stock: Joi.array().items(Joi.object({store: Joi.string(), qty: positiveInt})),
     color: Joi.array().items(Joi.string()).required(),
-    hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt}).required(),
+    hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}).required(),
     dustWaterproof: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
     connectors: Joi.string().regex(/^[a-z-]+$/).required(),
 })

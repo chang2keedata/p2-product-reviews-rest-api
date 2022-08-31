@@ -3,11 +3,6 @@
 ## Context and Goals
 This is a restful API designed for a project on earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku.
 
-## Demo
-![alt text]()
-
-A live website of the application can be found [here]().
-
 ## Sample Document
 Earphone document
 ```
@@ -46,7 +41,7 @@ User document
 **Body** | Expected JSON object for the body for POST, PATCH and PUT requests
 **Parameters** | Description of the parameters in the body and the URL
 **Expected Response** | Expected JSON object for the response
----
+
 |||
  --- | --- 
 **Title** | Login
@@ -55,7 +50,7 @@ User document
 **Body** | `{ "email": "<email>", "password": "<password>" }`
 **Parameters** | N/A
 **Expected Response** | `{ "message": "Logged in", "accessToken": "<JWT token>" }`
----
+
 |||
  --- | --- 
 **Title** | Retrieve all earphones with default pagination
@@ -63,23 +58,50 @@ User document
 **Endpoint Path** | /earphone
 **Body** | N/A
 **Parameters** | N/A
-**Expected Response** | ![alt text](images/search_all.png "search all earphones on page 1 with 2 results")
----
+**Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
+
 |||
  --- | --- 
 **Title** | Retrieve earphone with pagination
 **Method** | GET
-**Endpoint Path** | /earphone?page=1&limit=3
+**Endpoint Path** | /earphone?`parameter`
 **Body** | N/A
-**Parameters** | N/A
-**Expected Response** | ![alt text](images/pagination.png "page 1 with 3 results")
----
+**Parameters** | page=`integer`, limit=`integer` or both by adding `&` in between
+**Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}, {...}]}`
+
 |||
  --- | --- 
 **Title** | Retrieve result with criteria
 **Method** | GET
-**Endpoint Path** | /earphone?*parameter*
+**Endpoint Path** | /earphone?`parameter`
 **Body** | N/A
-**Parameters** |  type, hours, store, color, min_price, max_price
-|| Inverse: otherColor, rating
-**Expected Response** | ![alt text](images/result.png)
+**Parameters** |  type=`string`, hours=`integer`, store=`string`, color=`string`, min_price=`integer/float`, max_price=`integer/float`
+|| Inverse: otherColor=`string`, rating=`integer`
+**Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
+
+|||
+ --- | --- 
+**Title** | Create new earphone post
+**Method** | POST
+**Endpoint Path** | /add
+**Body** | earphone document **without review**
+**Parameters** | N/A
+**Expected Response** | `{ "message": "Created successfully" }`
+
+|||
+ --- | --- 
+**Title** | Update an earphone post
+**Method** | PUT
+**Endpoint Path** | /earphone/`:id`
+**Body** | earphone document **without review**
+**Parameters** | :id - _id of earphone object in document
+**Expected Response** | `{ "message": "Updated successfully" }`
+
+|||
+ --- | --- 
+**Title** | Delete an earphone post
+**Method** | Delete
+**Endpoint Path** | /earphone/`:id`
+**Body** | N/A
+**Parameters** | :id - _id of earphone object in document
+**Expected Response** | `{ "message": "Deleted successfully" }`
