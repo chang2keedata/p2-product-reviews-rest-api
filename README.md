@@ -53,7 +53,6 @@ User template
 **Parameters** | N/A
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
- --- | --- 
 **Title** | Retrieve result with pagination
 **Method** | GET
 **Endpoint Path** | /earphone?`parameter`
@@ -61,7 +60,6 @@ User template
 **Parameters** | page=`integer`, limit=`integer` or both by adding `&` in between
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}, {...}]}`
 |||
- --- | --- 
 **Title** | Retrieve result with criteria
 **Method** | GET
 **Endpoint Path** | /earphone?`parameter`
@@ -70,7 +68,6 @@ User template
 || Inverse: otherColor=`string`, rating=`integer`
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
- --- | --- 
 **Title** | Create a new product
 **Method** | POST
 **Endpoint Path** | /add
@@ -78,7 +75,6 @@ User template
 **Parameters** | N/A
 **Expected Response** | `{ "message": "Created successfully" }`
 |||
- --- | --- 
 **Title** | Update a product
 **Method** | PUT
 **Endpoint Path** | /earphone/`:id`
@@ -86,7 +82,6 @@ User template
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "message": "Updated successfully" }`
 |||
- --- | --- 
 **Title** | Delete a product
 **Method** | Delete
 **Endpoint Path** | /earphone/`:id`
@@ -103,32 +98,28 @@ User template
 **Body** | **review only** in earphone template 
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "message": "Created successfully" }`
-|||
- --- | --- 
+||| 
 **Title** | Retrive a review of product
 **Method** | GET
 **Endpoint Path** | /earphone/`:id`/review
 **Body** | N/A 
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "_id": <string>, "brandModel": <string>, "review": <array of objects> }`
-|||
- --- | --- 
+||| 
 **Title** | Retrive all reviews of user
 **Method** | GET
 **Endpoint Path** | /user/`:id`/review
 **Body** | N/A 
 **Parameters** | :id - _id of user object in document
 **Expected Response** | `[{ "_id": <string>, "userAllReviews": <array of objects> i.e "brandModel": <string>, "review": <array of objects> }]`
-|||
- --- | --- 
+||| 
 **Title** | Update a review of product
 **Method** | PUT 
 **Endpoint Path** | /earphone/`:id`/review/`:reviewid`
 **Body** | **review without email** in earphone template
 **Parameters** | :id - _id of earphone object in document, :reviewid - _id of earphone project in document
 **Expected Response** | `{ "message": "Updated successfully" }`
-|||
- --- | --- 
+||| 
 **Title** | Delete a review of product
 **Method** | DELETE 
 **Endpoint Path** | /earphone/`:id`/review/`:reviewid`
@@ -146,7 +137,6 @@ User template
 **Parameters** | N/A
 **Expected Response** | `{ "message": "<email> is registred successfully" }`
 |||
- --- | --- 
 **Title** | Login
 **Method** | POST
 **Endpoint Path** | /login
@@ -154,7 +144,6 @@ User template
 **Parameters** | N/A
 **Expected Response** | `{ "message": "Logged in", "accessToken": "<JWT token>" }`
 |||
- --- | --- 
 **Title** | Update a user
 **Method** | PUT
 **Endpoint Path** | /user/`:id`
@@ -162,7 +151,6 @@ User template
 **Parameters** | :id - _id of user object in document
 **Expected Response** | `{ "message": "Updated successfully" }`
 |||
- --- | --- 
 **Title** | Delete a user
 **Method** | Delete
 **Endpoint Path** | /user/`:id`
@@ -189,72 +177,59 @@ User template
 **Body & Expected Response** | ![alt text](images/addfail.png)
 || ![alt text](images/add.png)
 |||
- --- | --- 
 **Method** | GET
 **Endpoint Path** | /earphone
 **Body & Expected Response** | ![alt text](images/result.png)
 |||
- --- | --- 
 **Method** | GET
 **Endpoint Path** | /earphone?color=blue
 **Body & Expected Response** | ![alt text](images/blue.png)
 |||
- --- | --- 
 **Method** | GET
 **Endpoint Path** | /earphone?page=1&limit=1
 **Body & Expected Response** | ![alt text](images/page1&limit1.png)
 |||
- --- | --- 
 **Method** | PUT
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
 **Body & Expected Response** | ![alt text](images/updateprice.png)
 |||
- --- | --- 
 **Method** | DELETE
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
 **Body & Expected Response** | ![alt text](images/delete.png)
 |||
- --- | --- 
 **Method** | GET
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review
 **Body & Expected Response** | ![alt text](images/earphonereview.png)
 |||
- --- | --- 
 **Method** | GET
 **Endpoint Path** | /user/630c7435eb38837143989ce2/review
 **Body & Expected Response** | ![alt text](images/userreview.png)
 |||
- --- | --- 
 **Method** | POST
 **Endpoint Path** | /earphone/630f50922297a3ca1c561322/review
 **Body & Expected Response** | ![alt text](images/addreviewfail.png)
 || ![alt text](images/addreview.png)
 |||
- --- | --- 
 **Method** | PUT
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
 **Body & Expected Response** | ![alt text](images/updatereview.png)
 |||
- --- | --- 
 **Method** | DELETE
 **Endpoint Path** | earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
 **Body & Expected Response** | ![alt text](images/deletereview.png)
 |||
- --- | --- 
 **Method** | POST
 **Endpoint Path** | /signup
 **Body & Expected Response** | ![alt text](images/signupfail.png)
 || ![alt text](images/emailfail.png)
 || ![alt text](images/emailsuccess.png)
 |||
- --- | --- 
 **Method** | POST
 **Endpoint Path** | /login
 **Body & Expected Response** | ![alt text](images/loginfail.png)
 || ![alt text](images/login.png)
 |||
- --- | --- 
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
-**Body & Expected Response** | ![alt text](images/updateuserfail.png)
-|| ![alt text](images/updateuser.png)
+**Body & Expected Response** | <img src="images/updateuserfail.png" width=50% height=50%>
+|| <img src="images/updateuser.png" width=50% height=50%>
