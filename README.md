@@ -174,40 +174,44 @@ User template
  --- | --- 
 **Method** | POST
 **Endpoint Path** | /add
-**Body & Expected Response** | ![alt text](images/addfail.png)
-|| ![alt text](images/add.png)
+**Body & Expected Response** | <img src="images/addfail.png" width=60%><img src="images/add.png" width=30%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone
-**Body & Expected Response** | ![alt text](images/result.png)
+**Body & Expected Response** | <img src="images/result.png" width=40%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone?color=blue
-**Body & Expected Response** | ![alt text](images/blue.png)
+**Body & Expected Response** | <img src="images/blue.png" width=40%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone?page=1&limit=1
-**Body & Expected Response** | ![alt text](images/page1&limit1.png)
+**Body & Expected Response** | <img src="images/page1&limit1.png" width=40%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
-**Body & Expected Response** | ![alt text](images/updateprice.png)
+**Body & Expected Response** | !<img src="images/updateprice.png" width=40%>
 |||
 **Method** | DELETE
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
-**Body & Expected Response** | ![alt text](images/delete.png)
+**Body & Expected Response** | <img src="images/delete.png" width=40%><img src="images/deleteidnotfound.png" width=57%>
+|||
+**Method** | ALL
+**Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe7555/review
+|| /earphone/630ef7f15ea1b97eebcbbe75=/review
+**Body & Expected Response** | <img src="images/invalidid.png" width=50%><img src="images/invalidid2.png" width=50%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review
-**Body & Expected Response** | ![alt text](images/earphonereview.png)
+**Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
 |||
 **Method** | GET
 **Endpoint Path** | /user/630c7435eb38837143989ce2/review
-**Body & Expected Response** | ![alt text](images/userreview.png)
+**Body & Expected Response** | <img src="images/userreview.png" width=40%>
 |||
 **Method** | POST
 **Endpoint Path** | /earphone/630f50922297a3ca1c561322/review
-**Body & Expected Response** | <img src="images/addreviewfail.png" width=60%><img src="images/addreview.png" width=40%>
+**Body & Expected Response** | <img src="images/addreviewfail.png" width=60%><img src="images/addreview.png" width=33%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
@@ -223,8 +227,8 @@ User template
 |||
 **Method** | POST
 **Endpoint Path** | /login
-**Body & Expected Response** | <img src="images/loginfail.png" width=50%><img src="images/login.png" width=50%>
+**Body & Expected Response** | <img src="images/loginfail.png" width=50%><img src="images/login.png" width=30%>
 |||
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
-**Body & Expected Response** | <img src="images/updateuserfail.png" width=60%><img src="images/updateuser.png" width=40%>
+**Body & Expected Response** | <img src="images/updateuserfail.png" width=55%><img src="images/updateuser.png" width=40%>
