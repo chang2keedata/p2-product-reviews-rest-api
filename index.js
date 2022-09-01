@@ -375,7 +375,7 @@ async function main() {
     })
 
     // LOGIN
-    app.post('/login',[checkIfAuthenticationJWT],async function(req,res){
+    app.post('/login',async function(req,res){
         // VALIDATE BODY
         if(validator(validateLogin,req.body,res)) return res;
 

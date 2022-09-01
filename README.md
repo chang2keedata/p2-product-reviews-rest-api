@@ -1,10 +1,34 @@
 # TGCProject2 - Earphone REST API
 
-## Context and Goals
-This is a restful API designed for a project on earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku.
+## Intro
+This is a restful API designed for a project on earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku ([Link Here](https://tgc-earphone-review-rest-api.herokuapp.com "https://tgc-earphone-review-rest-api.herokuapp.com")).
+
+User are able to search, read, edit, delete the earphone post with login authentication (email and password). Although our server is built encryption system to hash all the users' password, please don't use any online banking related password. 
+
+## Context
+Bluetooth earphones are growing popular nowadays. Most people own at least one as their daily commuter companion to embrace themselves with their favorite music/drama/video/calls/etc or just to give themselves a peaceful noise reduced environment.
+
+## Goal
+Thus our goal is to gather information of bluetooth earphone about any best budget friendly/functional purposed/branded or not as long as long it works. Any features include prices, color, connector types, battery life, water and dustproof etc.
+
+## Tech used
+**Backend**
+- `Node.js` a JavaScript runtime built on Chrome's V8 JavaScript engine
+- `Express.js` a web application framework for Node.js
+- `MongoDB` a NoSQL database system
+- `CORS` a mechanism allows server to indicate any origins (domain, scheme, or port) other than its own
+- `joi` a npm package as data validator for JavaScript
+- `dotenv` a npm package to store configuration in the environment separate from code
+- `jsonwebtoken/JWT` a npm package to share security information between two parties — a client and a server
+- `bcrypt.js` a npm package enables storing passwords as hashed passwords instead of plaintext
+
+**Platforms**
+- `Github` an Internet hosting service for software development and version control using Git
+- `Gitpod` a platform for remote software development
+- `Heroku` a cloud platform helps developers to build, run, and operate applications entirely
 
 ## Sample Document
-Earphone template
+Earphone collection template
 ```
 {
     "brandModel": <string>
@@ -21,7 +45,7 @@ Earphone template
 }
 ```
 
-User template
+User collection template
 ```
 {
     "username": <string>,
@@ -33,7 +57,7 @@ User template
 }
 ```
 
-## Guideline of API Endpoints 
+## Guidelines of API Endpoint
 |||
  --- | --- 
 **Title** | A short phrase describing what the API does
