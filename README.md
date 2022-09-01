@@ -22,10 +22,11 @@ Thus our goal is to gather information of bluetooth earphone about any best budg
 - `jsonwebtoken/JWT` a npm package to share security information between two parties — a client and a server
 - `bcrypt.js` a npm package enables storing passwords as hashed passwords instead of plaintext
 
-**Platforms**
+**Platform and Software**
 - `Github` an Internet hosting service for software development and version control using Git
 - `Gitpod` a platform for remote software development
 - `Heroku` a cloud platform helps developers to build, run, and operate applications entirely
+- `Advanced REST Client` a API testing tool
 
 ## Sample Document
 Earphone collection template
