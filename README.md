@@ -207,29 +207,24 @@ User template
 |||
 **Method** | POST
 **Endpoint Path** | /earphone/630f50922297a3ca1c561322/review
-**Body & Expected Response** | ![alt text](images/addreviewfail.png)
-|| ![alt text](images/addreview.png)
+**Body & Expected Response** | <img src="images/addreviewfail.png" width=60%><img src="images/addreview.png" width=40%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
-**Body & Expected Response** | ![alt text](images/updatereview.png)
+**Body & Expected Response** | <img src="images/updatereview.png" width=50%>
 |||
 **Method** | DELETE
 **Endpoint Path** | earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
-**Body & Expected Response** | ![alt text](images/deletereview.png)
+**Body & Expected Response** | <img src="images/deletereview.png" width=50%>
 |||
 **Method** | POST
 **Endpoint Path** | /signup
-**Body & Expected Response** | ![alt text](images/signupfail.png)
-|| ![alt text](images/emailfail.png)
-|| ![alt text](images/emailsuccess.png)
+**Body & Expected Response** | <img src="images/signupfail.png" width=50%> <img src="images/emailfail.png" width=50%><img src="images/emailsuccess.png" width=50%>
 |||
 **Method** | POST
 **Endpoint Path** | /login
-**Body & Expected Response** | ![alt text](images/loginfail.png)
-|| ![alt text](images/login.png)
+**Body & Expected Response** | <img src="images/loginfail.png" width=50%><img src="images/login.png" width=50%>
 |||
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
-**Body & Expected Response** | <img src="images/updateuserfail.png" width=50% height=50%>
-|| <img src="images/updateuser.png" width=50% height=50%>
+**Body & Expected Response** | <img src="images/updateuserfail.png" width=60%><img src="images/updateuser.png" width=40%>
