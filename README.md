@@ -108,9 +108,9 @@ User template
 ||| 
 **Title** | Retrive all reviews of user
 **Method** | GET
-**Endpoint Path** | /user/`:id`/review
+**Endpoint Path** | /user/review?
 **Body** | N/A 
-**Parameters** | :id - _id of user object in document
+**Parameters** | N/A
 **Expected Response** | `[{ "_id": <string>, "userAllReviews": <array of objects> i.e "brandModel": <string>, "review": <array of objects> }]`
 ||| 
 **Title** | Update a review of product
@@ -194,7 +194,7 @@ User template
 |||
 **Method** | DELETE
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
-**Body & Expected Response** | <img src="images/delete.png" width=40%><img src="images/deleteidnotfound.png" width=57%>
+**Body & Expected Response** | <img src="images/delete.png" width=40%><img src="images/deleteidnotfound.png" width=58%>
 |||
 **Method** | ALL
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe7555/review
@@ -206,7 +206,7 @@ User template
 **Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
 |||
 **Method** | GET
-**Endpoint Path** | /user/630c7435eb38837143989ce2/review
+**Endpoint Path** | /user/review?
 **Body & Expected Response** | <img src="images/userreview.png" width=40%>
 |||
 **Method** | POST

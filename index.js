@@ -144,32 +144,40 @@ async function main() {
 
     //UPDATE DETAILS OF PRODUCT
     app.put('/earphone/:id',[checkIfAuthenticationJWT],async function(req,res){
-        // VALIDATE BODY
-        if(validator(validateProduct,req.body,res)) return res;
+        try {
+            // VALIDATE BODY
+            if(validator(validateProduct,req.body,res)) return res;
 
-        const earphone = await db.collection('earphone').findOne({
-            '_id': ObjectId(req.params.id)
-        })
+            const earphone = await db.collection('earphone').findOne({
+                '_id': ObjectId(req.params.id)
+            })
 
-        await db.collection('earphone').updateOne({
-            '_id': ObjectId(req.params.id)
-        },{
-            '$set': {
-                'brandModel': req.body.brandModel ? req.body.brandModel : earphone.brandModel,
-                'type': req.body.type ? req.body.type : earphone.type,
-                'earbuds': req.body.earbuds ? req.body.earbuds : earphone.earbuds,
-                'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
-                'price': req.body.price ? req.body.price : earphone.price,
-                'stock': req.body.stock ? req.body.stock : earphone.stock,
-                'color': req.body.color ? req.body.color : earphone.color,
-                'hours': req.body.hours ? req.body.hours : earphone.hours,
-                'dustWaterproof': req.body.dustWaterproof ? req.body.dustWaterproof : earphone.dustWaterproof,
-                'connectors': req.body.connectors ? req.body.connectors : earphone.connectors
-            }
-        })
-        res.status(200).json({
-            'message': 'Updated succesfully'
-        });
+            // EARPHONE ID NOT FOUND
+            if(earphone == null) throw err;
+
+            await db.collection('earphone').updateOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                '$set': {
+                    'brandModel': req.body.brandModel ? req.body.brandModel : earphone.brandModel,
+                    'type': req.body.type ? req.body.type : earphone.type,
+                    'earbuds': req.body.earbuds ? req.body.earbuds : earphone.earbuds,
+                    'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
+                    'price': req.body.price ? req.body.price : earphone.price,
+                    'stock': req.body.stock ? req.body.stock : earphone.stock,
+                    'color': req.body.color ? req.body.color : earphone.color,
+                    'hours': req.body.hours ? req.body.hours : earphone.hours,
+                    'dustWaterproof': req.body.dustWaterproof ? req.body.dustWaterproof : earphone.dustWaterproof,
+                    'connectors': req.body.connectors ? req.body.connectors : earphone.connectors
+                }
+            })
+
+            res.status(200).json({
+                'message': 'Updated succesfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // DELETE PRODUCT
@@ -177,35 +185,51 @@ async function main() {
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
        
-        await db.collection('earphone').deleteOne({
-            '_id': ObjectId(req.params.id)
-        })
-        res.status(200).json({
-            'message': 'Deleted successfully'
-        });
+        try {
+            const result = await db.collection('earphone').deleteOne({
+                '_id': ObjectId(req.params.id)
+            })
+            
+            // NO EARPHONE ID TO DELETE
+            if(result.deletedCount == 0) throw err;
+
+            res.status(200).json({
+                'message': 'Deleted successfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // ADD PRODUCT REVIEW 
     app.post('/earphone/:id/review',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
-       if(validator(validateReview,req.body,res)) return res;
+        if(validator(validateReview,req.body,res)) return res;
 
-        await db.collection('earphone').updateOne({
-            '_id': ObjectId(req.params.id)
-        },{
-            '$push': {
-                'review': {
-                    '_id': ObjectId(),
-                    'email': req.body.email,
-                    'comments': req.body.comments,
-                    'rating': req.body.rating,
-                    'date': new Date()
+        try {
+            const result = await db.collection('earphone').updateOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                '$push': {
+                    'review': {
+                        '_id': ObjectId(),
+                        'email': req.body.email,
+                        'comments': req.body.comments,
+                        'rating': req.body.rating,
+                        'date': new Date()
+                    }
                 }
-            }
-        })
-        res.status(201).json({
-            'message': 'Created successfully'
-        })
+            })
+
+            // NO REVIEW ID TO DELETE
+            if(result.modifiedCount == 0) throw err;
+        
+            res.status(201).json({
+                'message': 'Created successfully'
+            })
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // GET A REVIEW
@@ -213,22 +237,30 @@ async function main() {
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
 
-        const result = await db.collection('earphone').findOne({
-            '_id': ObjectId(req.params.id)
-        },{
-            'projection': {
-                '_id': 1,
-                'brandModel': 1,
-                'review': 1
-            }
-        })
-        res.status(200).send(result);
+        try {
+            const result = await db.collection('earphone').findOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                'projection': {
+                    '_id': 1,
+                    'brandModel': 1,
+                    'review': 1
+                }
+            })
+
+            // EARPHONE ID NOT FOUND
+            if(result == null) throw err;
+
+            res.status(200).send(result);
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // GET USER'S REVIEW FROM PRODUCT
-    app.get('/user/:id/review',[checkIfAuthenticationJWT],async function(req,res){
+    app.get('/user/review?',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE PARAMS
-        if(validator(validateParamsQuery,req.params,res)) return res;
+        if(validator(validateParamsQuery,req.query,res)) return res;
         
         const result = await db.collection('user').aggregate([{
             $lookup: {
@@ -248,31 +280,40 @@ async function main() {
 
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
-        // VALIDATE BODY
-        if(validator(validateReview,req.body,res)) return res;
+        // PARAMS AND BODY ERROR HANDLING
+        try {
+            // VALIDATE BODY
+            if(validator(validateReview,req.body,res)) return res;
+        
+            const review = await db.collection('earphone').findOne({
+                '_id': ObjectId(req.params.id),
+                'review._id': ObjectId(req.params.reviewid)
+            },{
+                'projection': {
+                    'review.$': 1,
+                }
+            })
 
-        const review = await db.collection('earphone').findOne({
-            '_id': ObjectId(req.params.id),
-            'review._id': ObjectId(req.params.reviewid)
-        },{
-            'projection': {
-                'review.$': 1,
-            }
-        })
+            // NO USER ID FOUND
+            if(!review) throw err;
 
-        const result = await db.collection('earphone').updateOne({
-            '_id': ObjectId(req.params.id),
-            'review._id': ObjectId(req.params.reviewid)
-        },{
-            '$set': {
-                'review.$.comments': req.body.comments ? req.body.comments : review.comments,
-                'review.$.rating': req.body.rating ? req.body.rating : review.rating,
-                'review.$.date': req.body.date ? new Date(req.body.date) : new Date()
-            }
-        })
-        res.status(200).json({
-            'message': 'Updated succesfully'
-        });
+            const result = await db.collection('earphone').updateOne({
+                '_id': ObjectId(req.params.id),
+                'review._id': ObjectId(req.params.reviewid)
+            },{
+                '$set': {
+                    'review.$.email': req.body.email ? req.body.email : review.email,
+                    'review.$.comments': req.body.comments ? req.body.comments : review.comments,
+                    'review.$.rating': req.body.rating ? req.body.rating : review.rating,
+                    'review.$.date': req.body.date ? new Date(req.body.date) : new Date()
+                }
+            })
+            res.status(200).json({
+                'message': 'Updated succesfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // DELETE REVIEW
@@ -280,18 +321,26 @@ async function main() {
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
-        const result = await db.collection('earphone').deleteOne({
-            '_id': ObjectId(req.params.id)
-        },{
-            '$pull': {
-                'review': {
-                    '_id': ObjectId(req.params.reviewid)
+        try {
+            const result = await db.collection('earphone').updateOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                '$pull': {
+                    'review': {
+                        '_id': ObjectId(req.params.reviewid)
+                    }
                 }
-            }
-        })
-        res.status(200).json({
-            'message': 'Deleted succesfully'
-        });
+            })
+
+            // NO REVIEW ID TO DELETE
+            if(result.modifiedCount == 0) throw err;
+
+            res.status(200).json({
+                'message': 'Deleted succesfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // SIGNUP USER
@@ -299,10 +348,11 @@ async function main() {
         // VALIDATE BODY
         if(validator(validateSignup,req.body,res)) return res;
 
-        // CHECK EXISTING EMAIL
         const emailExist = await db.collection('user').findOne({
             'email': req.body.email
         })
+
+        // CHECK EXISTING EMAIL
         if(emailExist) return res.status(422).json({
             'message': `${req.body.email} is already been registered`
         })
@@ -332,10 +382,13 @@ async function main() {
         const user = await db.collection('user').findOne({
             'email': req.body.email
         })
+
+        // EMAIL NOT VALID
         if(!user) return res.status(422).json({
             'message': 'Invalid email or password'
         });
 
+        // COMPARE HASHING PASSWORD
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if(!validPassword) return res.status(422).json({
             'message': 'Invalid email or password'
@@ -361,25 +414,33 @@ async function main() {
 
     // UPDATE USER
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
-        // VALIDATE BODY
-        if(validator(validateUserUpdate,req.body,res)) return res;
+        // PARAMS AND BODY ERROR HANDLING
+        try {
+            // VALIDATE BODY
+            if(validator(validateUserUpdate,req.body,res)) return res;
         
-        const user = await db.collection('user').findOne({
-            '_id': ObjectId(req.params.id)
-        })
+            const user = await db.collection('user').findOne({
+                '_id': ObjectId(req.params.id)
+            })
 
-        await db.collection('user').updateOne({
-            '_id': ObjectId(req.params.id)
-        },{
-            '$set': {
-                'username': req.body.username ? req.body.username : user.username,
-                'firstname': req.body.firstname ? req.body.firstname : user.firstname,
-                'lastname': req.body.lastname ? req.body.lastname : user.lastname
-            }
-        })
-        res.status(200).json({
-            'message': 'Updated succesfully'
-        });
+            // NO USER ID FOUND
+            if(!user) throw err;
+
+            await db.collection('user').updateOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                '$set': {
+                    'username': req.body.username ? req.body.username : user.username,
+                    'firstname': req.body.firstname ? req.body.firstname : user.firstname,
+                    'lastname': req.body.lastname ? req.body.lastname : user.lastname
+                }
+            })
+            res.status(200).json({
+                'message': 'Updated succesfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // DELETE USER
@@ -387,12 +448,20 @@ async function main() {
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
-        await db.collection('user').deleteOne({
-            '_id': ObjectId(req.params.id)
-        })
-        res.status(200).json({
-            'message': 'Deleted successfully'
-        });
+        try {
+            let result = await db.collection('user').deleteOne({
+                '_id': ObjectId(req.params.id)
+            })
+            
+            // NO USER ID TO DELETE
+            if(result.deletedCount == 0) throw err;
+
+            res.status(200).json({
+                'message': 'Deleted successfully'
+            });
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // THE 404 ROUTE
