@@ -257,3 +257,10 @@ User collection template
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
 **Body & Expected Response** | <img src="images/updateuserfail.png" width=55%><img src="images/updateuser.png" width=40%>
+
+## Credits
+- Trent Global College & Tutor Paul [Link](https://www.trentglobal.edu.sg/diplomainsoftwaredevelopment/)
+- Stack Overflow for coding issues [Link](https://stackoverflow.com/questions/69416996/why-does-my-mongodb-nodejs-driver-query-on-aggregate-lookup-not-return-results)
+- MongoDB documentation [Query and Projection Operators](https://www.mongodb.com/docs/manual/reference/operator/query/)
+- JOI documentation [Link](https://joi.dev/api/?v=17.6.0)
+- Youtube videos ([Joi validator](https://www.youtube.com/watch?v=_svzevhv4vg&t=5s), [bcrypt.js](https://www.youtube.com/watch?v=2jqok-WgelI&t=1181s))
