@@ -77,6 +77,12 @@ async function main() {
             }
         }
 
+        if(req.query.otherType) {
+            criteria.type = {
+                '$ne': req.query.otherType
+            }
+        }
+
         if(req.query.hours) {
             criteria['hours.music'] = {
                 '$not': {
@@ -117,14 +123,9 @@ async function main() {
             }
         }
 
-        if(req.query.rating) {
-            criteria['review.rating'] = {
-                '$ne': parseInt(req.query.rating)
-            }
-        }
-
         const result = await db.collection('earphone').find(criteria, {
             'projection': {
+                '_id': 1,
                 'brandModel': 1,
                 'type': 1,
                 'bluetooth': 1,
@@ -133,8 +134,7 @@ async function main() {
                 'color': 1,
                 'hours': 1,
                 'dustWaterproof': 1,
-                'connectors': 1,
-                'review': 1
+                'connectors': 1
             }
         }).limit(limit * 1).skip((page - 1) * limit).toArray();
         res.status(200).json({
@@ -296,7 +296,7 @@ async function main() {
                 }
             })
 
-            // NO USER ID FOUND
+            // NO IDs FOUND
             if(!review) throw err;
 
             const result = await db.collection('earphone').updateOne({
@@ -406,8 +406,8 @@ async function main() {
                 'expiresIn': '1h'
             })
             res.json({
-                'message': 'Logged in',
-                'accessToken': token
+                'User ID': user._id,
+                'Access Token': token
             })
         } else {
             res.sendStatus(401)

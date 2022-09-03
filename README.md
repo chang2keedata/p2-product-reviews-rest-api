@@ -90,10 +90,10 @@ User collection template
 |||
 **Title** | Retrieve result with criteria
 **Method** | GET
-**Endpoint Path** | /earphone?`parameter`
+**Endpoint Path** | /earphone?`parameter or empty`
 **Body** | N/A
 **Parameters** |  type=`string`, hours=`integer`, store=`string`, color=`string`, min_price=`integer/float`, max_price=`integer/float`
-|| Inverse: otherColor=`string`, rating=`integer`
+|| Inverse: otherColor=`string`, otherType=`string`
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
 **Title** | Create a new product
@@ -170,7 +170,7 @@ User collection template
 **Endpoint Path** | /login
 **Body** | `{ "email": "<email>", "password": "<password>" }`
 **Parameters** | N/A
-**Expected Response** | `{ "message": "Logged in", "accessToken": "<JWT token>" }`
+**Expected Response** | `{ "User ID" : <id>, "Access Token": "<JWT token>" }`
 |||
 **Title** | Update a user
 **Method** | PUT
@@ -256,7 +256,7 @@ User collection template
 |||
 **Method** | POST
 **Endpoint Path** | /login
-**Body & Expected Response** | <img src="images/loginfail.png" width=50%><img src="images/login.png" width=30%>
+**Body & Expected Response** | <img src="images/loginfail.png" width=54%><img src="images/login.png" width=30%>
 |||
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c

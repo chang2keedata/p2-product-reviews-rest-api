@@ -24,13 +24,13 @@ const productSchema = Joi.object({
 
 const paramsQuerySchema = Joi.object({
     type: Joi.string().regex(/^[a-z-]+$/),
+    otherType: Joi.string().regex(/^[a-z-]+$/),
     store: Joi.string().regex(/^[a-z]+$/),
     color: Joi.string().regex(/^[a-z]+$/),
     otherColor: Joi.string().regex(/^[a-z&,]+$/),
     hours: Joi.number(),
     min_price: Joi.number(),
     max_price: Joi.number(),
-    rating: Joi.number().integer(),
     id: Joi.string().alphanum().trim(),
     reviewid: Joi.string().alphanum().trim(),
     limit: Joi.number().integer().positive(),
