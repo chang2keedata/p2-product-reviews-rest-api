@@ -12,13 +12,13 @@ const validator = (schema) => (payload) => schema.validate(payload, {
 const productSchema = Joi.object({
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
-    earbuds: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
+    earbuds: Joi.boolean().required(),
     bluetooth: positiveNum.less(6),
     price: positiveNum,
     stock: Joi.array().items(Joi.object({store: Joi.string(), qty: positiveInt})),
     color: Joi.array().items(Joi.string()).required(),
     hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}).required(),
-    dustWaterproof: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
+    dustWaterproof: Joi.boolean().required(),
     connectors: Joi.string().regex(/^[a-z-]+$/).required()
 })
 
@@ -28,7 +28,7 @@ const paramsQuerySchema = Joi.object({
     store: Joi.string().regex(/^[a-z]+$/),
     color: Joi.string().regex(/^[a-z]+$/),
     otherColor: Joi.string().regex(/^[a-z&,]+$/),
-    hours: Joi.number(),
+    otherHours: Joi.number(),
     min_price: Joi.number(),
     max_price: Joi.number(),
     id: Joi.string().alphanum().trim(),

@@ -37,13 +37,13 @@ Earphone collection template
 {
     "brandModel": <string>
     "type": <string>
-    "earbuds": <boolean> i.e 'yes', 'no', 'y', 'n'
+    "earbuds": <boolean> i.e true, false
     "bluetooth": <float>
     "price": <integer>
     "stock": <array of objects> i.e [{"store": <string>, "qty": <integer>}]
     "color": <array>
     "hours": <object> i.e {"music": <integer>, "cableCharging": <integer>, "boxCharging": <integer>}
-    "dustWaterproof": <boolean> i.e 'yes', 'no', 'y', 'n'
+    "dustWaterproof": <boolean> i.e true, false
     "connectors": <string>
     "review": <array of objects> i.e [{"email": <string>, "comments": <string>, "rating": <integer>}]
 }
@@ -92,21 +92,21 @@ User collection template
 **Method** | GET
 **Endpoint Path** | /earphone?`parameter or empty`
 **Body** | N/A
-**Parameters** |  type=`string`, hours=`integer`, store=`string`, color=`string`, min_price=`integer/float`, max_price=`integer/float`
-|| Inverse: otherColor=`string`, otherType=`string`
+**Parameters** |  type=`string`, store=`string`, color=`string`, min_price=`integer/float`, max_price=`integer/float`
+|| Inverse: otherHours=`integer`, otherColor=`string`, otherType=`string`
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
 **Title** | Create a new product
 **Method** | POST
 **Endpoint Path** | /add
-**Body** | earphone template **without review**
+**Body** | earphone collection template **without review**
 **Parameters** | N/A
 **Expected Response** | `{ "message": "Created successfully" }`
 |||
 **Title** | Update a product
 **Method** | PUT
 **Endpoint Path** | /earphone/`:id`
-**Body** | earphone template **without review**
+**Body** | earphone collection collection template **without review**
 **Parameters** | :id - _id of earphone object in document
 **Expected Response** | `{ "message": "Updated successfully" }`
 |||
@@ -206,15 +206,15 @@ User collection template
 |||
 **Method** | GET
 **Endpoint Path** | /earphone
-**Body & Expected Response** | <img src="images/result.png" width=40%>
+**Body & Expected Response** | <img src="images/result.png" width=50%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone?color=blue
-**Body & Expected Response** | <img src="images/blue.png" width=40%>
+**Body & Expected Response** | <img src="images/blue.png" width=50%>
 |||
 **Method** | GET
 **Endpoint Path** | /earphone?page=1&limit=1
-**Body & Expected Response** | <img src="images/page1&limit1.png" width=40%>
+**Body & Expected Response** | <img src="images/page1&limit1.png" width=50%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75

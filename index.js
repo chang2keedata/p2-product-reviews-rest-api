@@ -83,10 +83,10 @@ async function main() {
             }
         }
 
-        if(req.query.hours) {
+        if(req.query.otherHours) {
             criteria['hours.music'] = {
                 '$not': {
-                    '$eq': parseInt(req.query.hours)
+                    '$eq': parseInt(req.query.otherHours)
                 }
             }
         }
