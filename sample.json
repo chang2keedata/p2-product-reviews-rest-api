@@ -1,7 +1,8 @@
+// Earphone collection
 {
-    "brandModel": "QCY T12",
+    "brandModel": "AAA 34",
     "type": "on-ear",
-    "earbuds": false,
+    "earbuds": "y",
     "bluetooth": 5.1,
     "price": 10,
     "stock": [
@@ -17,22 +18,23 @@
         "cableCharging": 2,
         "boxCharging": 20
     },
-    "dustWaterproof": true,
+    "dustWaterproof": "yes",
     "connectors": "type-c",
     "review": [
         {
-            "email": "",
-            "comments": "",
+            "email": "tom@yahoo.com",
+            "comments": "good",
             "rating": 5
         }
     ]
 }
 
+// User collection
 {
-    "username": "",
-    "firstname": "",
-    "lastname": "",
-    "email": "",
-    "password": "",
-    "comfirmPassword": ""
+    "username": "tom",
+    "firstname": "tom",
+    "lastname": "tom",
+    "email": "tom@yahoo.com",
+    "password": "1234567890",
+    "comfirmPassword": "1234568790"
 }

@@ -1,7 +1,7 @@
-# TGCProject2 - Earphone REST API
+# TGCProject2 - Bluetooth Earphone REST API
 
 ## Intro
-This is a restful API designed for a project on earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku ([Link Here](https://tgc-earphone-review-rest-api.herokuapp.com "https://tgc-earphone-review-rest-api.herokuapp.com")).
+This is a restful API designed for a project on bluetooth earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku ([Link Here](https://tgc-earphone-review-rest-api.herokuapp.com "https://tgc-earphone-review-rest-api.herokuapp.com")).
 
 User are able to search, read, edit, delete the earphone post with login authentication (email and password). Although our server is built encryption system to hash all the users' password, please don't use any online banking related password. 
 
@@ -10,6 +10,9 @@ Bluetooth earphones are growing popular nowadays. Most people own at least one a
 
 ## Goal
 Thus our goal is to gather information of bluetooth earphone about any best budget friendly/functional purposed/branded or not as long as long it works. Any features include prices, color, connector types, battery life, water and dustproof etc.
+
+## Target Audience
+Any bluetooth user can contirbute their user experiences or anyone who need a shopping research before purchasing. 
 
 ## Tech used
 **Backend**
@@ -133,10 +136,10 @@ User collection template
 ||| 
 **Title** | Retrive all reviews of user
 **Method** | GET
-**Endpoint Path** | /user/review?
+**Endpoint Path** | /user/`:id`/`:email`/review
 **Body** | N/A 
-**Parameters** | N/A
-**Expected Response** | `[{ "_id": <string>, "userAllReviews": <array of objects> i.e "brandModel": <string>, "review": <array of objects> }]`
+**Parameters** | :id - _id of user object in document, :email - full email of user object in document
+**Expected Response** | `[{ "_id": <string>, "userAllReviews": <objects> i.e "brandModel": <string>, "review": <objects> }]`
 ||| 
 **Title** | Update a review of product
 **Method** | PUT 
@@ -193,8 +196,8 @@ User collection template
 **Parameters** | N/A
 **Expected Response** | `Server could not find what was requested`
 
-## Test Cases
-## Product
+## Testing (Success, Failure, Fringe)
+## Product Cases
 |||
  --- | --- 
 **Method** | POST
@@ -219,19 +222,17 @@ User collection template
 |||
 **Method** | DELETE
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
-**Body & Expected Response** | <img src="images/delete.png" width=40%><img src="images/deleteidnotfound.png" width=58%>
+**Body & Expected Response** | <img src="images/delete.png" width=50%>
+
+## Review Cases
 |||
-**Method** | ALL
-**Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe7555/review
-|| /earphone/630ef7f15ea1b97eebcbbe75=/review
-**Body & Expected Response** | <img src="images/invalidid.png" width=50%><img src="images/invalidid2.png" width=50%>
-|||
+ --- | --- 
 **Method** | GET
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review
 **Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
 |||
 **Method** | GET
-**Endpoint Path** | /user/review?
+**Endpoint Path** | /user/630c7ef88bed3697054e3ab2/lee@lee.com/review
 **Body & Expected Response** | <img src="images/userreview.png" width=40%>
 |||
 **Method** | POST
@@ -245,7 +246,10 @@ User collection template
 **Method** | DELETE
 **Endpoint Path** | earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
 **Body & Expected Response** | <img src="images/deletereview.png" width=50%>
+
+## User Cases
 |||
+ --- | --- 
 **Method** | POST
 **Endpoint Path** | /signup
 **Body & Expected Response** | <img src="images/signupfail.png" width=50%> <img src="images/emailfail.png" width=50%><img src="images/emailsuccess.png" width=50%>
@@ -258,9 +262,29 @@ User collection template
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
 **Body & Expected Response** | <img src="images/updateuserfail.png" width=55%><img src="images/updateuser.png" width=40%>
 
+## Other Cases
+|||
+ --- | --- 
+**Method** | GET/POST/PUT/DELETE
+**Endpoint Path** | no JWT access except `/login`, `/signup` and `404 route`
+**Body & Expected Response** | <img src="images/notoken.png" width=50%>
+|||
+**Method** | ALL/GET/POST/PUT/DELETE
+**Endpoint Path** | any route typo or doesn't match validation
+**Body & Expected Response** | <img src="images/invalidid.png" width=50%> <img src="images/invalidid2.png" width=50%>
+|||
+**Method** | GET/POST/PUT/DELETE
+**Endpoint Path** | `parameter` or `query` not found in database
+**Body & Expected Response** | <img src="images/datanotfound.png" width=50%>
+|||
+**Method** | GET/POST/PUT/DELETE
+**Endpoint Path** | data not found in database
+**Body & Expected Response** | <img src="images/noresult.png" width=50%>
+
 ## Credits
 - Trent Global College & Tutor Paul [Link](https://www.trentglobal.edu.sg/diplomainsoftwaredevelopment/)
 - Stack Overflow for coding issues [Link](https://stackoverflow.com/questions/69416996/why-does-my-mongodb-nodejs-driver-query-on-aggregate-lookup-not-return-results)
-- MongoDB documentation [Query and Projection Operators](https://www.mongodb.com/docs/manual/reference/operator/query/)
+- MongoDB documentation [$unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)
+- StackChief [$lookup](https://www.stackchief.com/tutorials/%24lookup%20Examples%20%7C%20MongoDB)
 - JOI documentation [Link](https://joi.dev/api/?v=17.6.0)
 - Youtube videos ([Joi validator](https://www.youtube.com/watch?v=_svzevhv4vg&t=5s), [bcrypt.js](https://www.youtube.com/watch?v=2jqok-WgelI&t=1181s))

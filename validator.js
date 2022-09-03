@@ -19,7 +19,7 @@ const productSchema = Joi.object({
     color: Joi.array().items(Joi.string()).required(),
     hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}).required(),
     dustWaterproof: Joi.boolean().truthy('yes','y').falsy('no','n').required(),
-    connectors: Joi.string().regex(/^[a-z-]+$/).required(),
+    connectors: Joi.string().regex(/^[a-z-]+$/).required()
 })
 
 const paramsQuerySchema = Joi.object({
@@ -34,7 +34,8 @@ const paramsQuerySchema = Joi.object({
     id: Joi.string().alphanum().trim(),
     reviewid: Joi.string().alphanum().trim(),
     limit: Joi.number().integer().positive(),
-    page: Joi.number().integer().positive()
+    page: Joi.number().integer().positive(),
+    email: Joi.string().trim().email().regex(/^[a-z0-9-@._]+$/)
 })
 
 const reviewSchema = Joi.object({
