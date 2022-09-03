@@ -28,7 +28,7 @@ const paramsQuerySchema = Joi.object({
     store: Joi.string().regex(/^[a-z]+$/),
     color: Joi.string().regex(/^[a-z]+$/),
     otherColor: Joi.string().regex(/^[a-z&,]+$/),
-    otherHours: Joi.number(),
+    otherMusicHours: Joi.number(),
     min_price: Joi.number(),
     max_price: Joi.number(),
     id: Joi.string().alphanum().trim(),

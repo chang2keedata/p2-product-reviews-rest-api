@@ -83,10 +83,10 @@ async function main() {
             }
         }
 
-        if(req.query.otherHours) {
+        if(req.query.otherMusicHours) {
             criteria['hours.music'] = {
                 '$not': {
-                    '$eq': parseInt(req.query.otherHours)
+                    '$eq': parseInt(req.query.otherMusicHours)
                 }
             }
         }
@@ -94,7 +94,7 @@ async function main() {
         if(req.query.store) {
             criteria.stock = {
                 '$elemMatch': {
-                    'store': req.query.stock
+                    'store': req.query.store
                 }
             }
         }
@@ -191,7 +191,7 @@ async function main() {
             })
             
             // NO EARPHONE ID TO DELETE
-            if(result.deletedCount == 0) throw err;
+            if(result.deletedCount === 0) throw err;
 
             res.status(200).json({
                 'message': 'Deleted successfully'
@@ -222,7 +222,7 @@ async function main() {
             })
 
             // NO REVIEW ID TO DELETE
-            if(result.modifiedCount == 0) throw err;
+            if(result.modifiedCount === 0) throw err;
         
             res.status(201).json({
                 'message': 'Created successfully'
@@ -249,7 +249,7 @@ async function main() {
             })
 
             // EARPHONE ID NOT FOUND
-            if(result == null) throw err;
+            if(result === null) throw err;
 
             res.status(200).send(result);
         } catch(err) {
@@ -262,22 +262,31 @@ async function main() {
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
         
-        const result = await db.collection('user').aggregate([
-            { $match: { _id: ObjectId(req.params.id)} },
-            { $lookup: {
-                from: "earphone",
-                localField: "email",
-                foreignField: "review.email",
-                as: "userAllReviews"
-            }},
-            { $unwind: "$userAllReviews" },
-            { $unwind: "$userAllReviews.review" },
-            { $match: {'userAllReviews.review.email': req.params.email} },
-            { $project: {
-                    'userAllReviews.brandModel': 1,
-                    'userAllReviews.review': 1
-            }}]).toArray();
-        res.status(200).send(result);
+               try {
+            const result = await db.collection('user').aggregate([
+                { $match: { _id: ObjectId(req.params.id)} },
+                { $lookup: {
+                    from: "earphone",
+                    localField: "email",
+                    foreignField: "review.email",
+                    as: "userAllReviews"
+                }},
+                { $unwind: "$userAllReviews" },
+                { $unwind: "$userAllReviews.review" },
+                { $match: {'userAllReviews.review.email': req.params.email} },
+                { $project: {
+                        'userAllReviews.brandModel': 1,
+                        'userAllReviews.review': 1
+                }}
+            ]).toArray();
+            
+            // IF USER ID OR EMAIL NOT FOUND
+            if(!result || result.length === 0) throw err;
+
+            res.status(200).send(result);
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
     })
 
     // EDIT THE REVIEW
@@ -335,7 +344,7 @@ async function main() {
             })
 
             // NO REVIEW ID TO DELETE
-            if(result.modifiedCount == 0) throw err;
+            if(result.modifiedCount === 0) throw err;
 
             res.status(200).json({
                 'message': 'Deleted succesfully'
@@ -456,7 +465,7 @@ async function main() {
             })
             
             // NO USER ID TO DELETE
-            if(result.deletedCount == 0) throw err;
+            if(result.deletedCount === 0) throw err;
 
             res.status(200).json({
                 'message': 'Deleted successfully'

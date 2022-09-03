@@ -81,19 +81,14 @@ User collection template
 **Parameters** | N/A
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
-**Title** | Retrieve result with pagination
+**Title** | Retrieve result with criteria or/and pagination
 **Method** | GET
-**Endpoint Path** | /earphone?`parameter`
-**Body** | N/A
-**Parameters** | page=`integer`, limit=`integer` or both by adding `&` in between
-**Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}, {...}]}`
-|||
-**Title** | Retrieve result with criteria
-**Method** | GET
-**Endpoint Path** | /earphone?`parameter or empty`
+**Endpoint Path** | /earphone?`parameter(s) or empty`
 **Body** | N/A
 **Parameters** |  type=`string`, store=`string`, color=`string`, min_price=`integer/float`, max_price=`integer/float`
 || Inverse: otherHours=`integer`, otherColor=`string`, otherType=`string`
+|| page=`integer` or/and limit=`integer`
+|| adding `&` in between parameters to match your query
 **Expected Response** | `{ "page": 1, "limit": 2, "result": [{...},{...}]}`
 |||
 **Title** | Create a new product
@@ -215,6 +210,10 @@ User collection template
 **Method** | GET
 **Endpoint Path** | /earphone?page=1&limit=1
 **Body & Expected Response** | <img src="images/page1&limit1.png" width=50%>
+|||
+**Method** | GET
+**Endpoint Path** | /earphone?color=yellow&type=in-ear&page=1&limit=5
+**Body & Expected Response** | <img src="images/yellow&in-ear&page1&limit5.png" width=50%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/630ef7f15ea1b97eebcbbe75
