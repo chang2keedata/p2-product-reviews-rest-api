@@ -259,45 +259,6 @@ async function main() {
         }
     })
 
-    // GET USER'S REVIEW FROM PRODUCT
-    app.get('/user/:id/:email/review',[checkIfAuthenticationJWT],async function(req,res){
-        // VALIDATE QUERY
-        if(validator(validateParamsQuery,req.query,res)) return res;
-        
-        // PAGINATION
-        let { page = 1, limit = 2 } = req.query;
-
-        try {
-            const result = await db.collection('user').aggregate([
-                { $match: { _id: ObjectId(req.params.id)} },
-                { $lookup: {
-                    from: "earphone",
-                    localField: "email",
-                    foreignField: "review.email",
-                    as: "userAllReviews"
-                }},
-                { $unwind: "$userAllReviews" },
-                { $unwind: "$userAllReviews.review" },
-                { $match: {'userAllReviews.review.email': req.params.email} },
-                { $project: {
-                        'userAllReviews.brandModel': 1,
-                        'userAllReviews.review': 1
-                }},
-                { $skip: parseInt(page - 1) * limit },
-                { $limit: limit * 1 },
-            ]).toArray();
-            
-            // IF USER ID OR EMAIL OR REVIEW NOT FOUND
-            if(!result || result.length === 0) throw err;
-
-            res.status(200).json({
-                page, limit, result
-            });
-        } catch(err) {
-            res.status(400).end('Any modifications are needed or no review')
-        }
-    })
-
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
         // VALIDATE BODY
@@ -360,6 +321,45 @@ async function main() {
             });
         } catch(err) {
             res.status(400).end('Any modifications are needed')
+        }
+    })
+
+    // GET USER'S REVIEW FROM PRODUCT
+    app.get('/user/:id/:email/review',[checkIfAuthenticationJWT],async function(req,res){
+        // VALIDATE QUERY
+        if(validator(validateParamsQuery,req.query,res)) return res;
+        
+        // PAGINATION
+        let { page = 1, limit = 2 } = req.query;
+
+        try {
+            const result = await db.collection('user').aggregate([
+                { $match: { _id: ObjectId(req.params.id)} },
+                { $lookup: {
+                    from: "earphone",
+                    localField: "email",
+                    foreignField: "review.email",
+                    as: "userAllReviews"
+                }},
+                { $unwind: "$userAllReviews" },
+                { $unwind: "$userAllReviews.review" },
+                { $match: {'userAllReviews.review.email': req.params.email} },
+                { $project: {
+                        'userAllReviews.brandModel': 1,
+                        'userAllReviews.review': 1
+                }},
+                { $skip: parseInt(page - 1) * limit },
+                { $limit: limit * 1 },
+            ]).toArray();
+            
+            // IF USER ID OR EMAIL OR REVIEW NOT FOUND
+            if(!result || result.length === 0) throw err;
+
+            res.status(200).json({
+                page, limit, result
+            });
+        } catch(err) {
+            res.status(404).end('Any modifications are needed or no review')
         }
     })
 

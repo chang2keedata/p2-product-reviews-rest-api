@@ -228,17 +228,13 @@ User collection template
 ## Review Cases
 |||
  --- | --- 
-**Method** | GET
-**Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review
-**Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
-|||
-**Method** | GET
-**Endpoint Path** | /user/630c7ef88bed3697054e3ab2/lee@lee.com/review?page=2&limit=2
-**Body & Expected Response** | <img src="images/userreview&page2&limit2.png" width=40%>
-|||
 **Method** | POST
 **Endpoint Path** | /earphone/630f50922297a3ca1c561322/review
 **Body & Expected Response** | <img src="images/addreviewfail.png" width=60%><img src="images/addreview.png" width=33%>
+|||
+**Method** | GET
+**Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review
+**Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
 |||
 **Method** | PUT
 **Endpoint Path** | /earphone/6308e842fa01e789ba8742ca/review/6309c51829020664650c06ac
@@ -251,13 +247,17 @@ User collection template
 ## User Cases
 |||
  --- | --- 
+**Method** | GET
+**Endpoint Path** | /user/630c7ef88bed3697054e3ab2/lee@lee.com/review?page=2&limit=2
+**Body & Expected Response** | <img src="images/userreview&page2&limit2.png" width=50%> <img src="images/userreviewfail.png" width=50%>
+|||
 **Method** | POST
 **Endpoint Path** | /signup
 **Body & Expected Response** | <img src="images/signupfail.png" width=52%> <img src="images/emailfail.png" width=49%><img src="images/emailsuccess.png" width=50%>
 |||
 **Method** | POST
 **Endpoint Path** | /login
-**Body & Expected Response** | <img src="images/loginfail.png" width=54%><img src="images/login.png" width=36%>
+**Body & Expected Response** | <img src="images/loginfail.png" width=54%><img src="images/login.png" width=35%>
 |||
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
