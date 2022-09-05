@@ -253,11 +253,11 @@ User collection template
  --- | --- 
 **Method** | POST
 **Endpoint Path** | /signup
-**Body & Expected Response** | <img src="images/signupfail.png" width=50%> <img src="images/emailfail.png" width=50%><img src="images/emailsuccess.png" width=50%>
+**Body & Expected Response** | <img src="images/signupfail.png" width=52%> <img src="images/emailfail.png" width=49%><img src="images/emailsuccess.png" width=50%>
 |||
 **Method** | POST
 **Endpoint Path** | /login
-**Body & Expected Response** | <img src="images/loginfail.png" width=54%><img src="images/login.png" width=30%>
+**Body & Expected Response** | <img src="images/loginfail.png" width=54%><img src="images/login.png" width=36%>
 |||
 **Method** | PUT
 **Endpoint Path** | /user/630f4caaffb13891f245dd3c
