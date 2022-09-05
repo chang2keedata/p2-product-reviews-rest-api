@@ -19,7 +19,7 @@ Any bluetooth user can contirbute their user experiences or anyone who need a sh
 - `Node.js` a JavaScript runtime built on Chrome's V8 JavaScript engine
 - `Express.js` a web application framework for Node.js
 - `MongoDB` a NoSQL database system
-- `CORS` a mechanism allows server to indicate any origins (domain, scheme, or port) other than its own
+- `Cross-Origin Resource Sharing/CORS` a mechanism allows server to indicate any origins (domain, scheme, or port) other than its own
 - `joi` a npm package as data validator for JavaScript
 - `dotenv` a npm package to store configuration in the environment separate from code
 - `jsonwebtoken/JWT` a npm package to share security information between two parties — a client and a server
@@ -134,7 +134,9 @@ User collection template
 **Endpoint Path** | /user/`:id`/`:email`/review
 **Body** | N/A 
 **Parameters** | :id - _id of user object in document, :email - full email of user object in document
-**Expected Response** | `[{ "_id": <string>, "userAllReviews": <objects> i.e "brandModel": <string>, "review": <objects> }]`
+|| page=`integer` or/and limit=`integer`
+|| adding `&` in between parameters to match your query
+**Expected Response** | `{"page": 1, "limit": 2, "result": [{ "_id": <string>, "userAllReviews": <objects> i.e "brandModel": <string>, "review": <objects> }]}`
 ||| 
 **Title** | Update a review of product
 **Method** | PUT 
@@ -231,8 +233,8 @@ User collection template
 **Body & Expected Response** | <img src="images/earphonereview.png" width=40%>
 |||
 **Method** | GET
-**Endpoint Path** | /user/630c7ef88bed3697054e3ab2/lee@lee.com/review
-**Body & Expected Response** | <img src="images/userreview.png" width=40%>
+**Endpoint Path** | /user/630c7ef88bed3697054e3ab2/lee@lee.com/review?page=2&limit=2
+**Body & Expected Response** | <img src="images/userreview&page2&limit2.png" width=40%>
 |||
 **Method** | POST
 **Endpoint Path** | /earphone/630f50922297a3ca1c561322/review
@@ -285,5 +287,5 @@ User collection template
 - Stack Overflow for coding issues [Link](https://stackoverflow.com/questions/69416996/why-does-my-mongodb-nodejs-driver-query-on-aggregate-lookup-not-return-results)
 - MongoDB documentation [$unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)
 - StackChief [$lookup](https://www.stackchief.com/tutorials/%24lookup%20Examples%20%7C%20MongoDB)
-- JOI documentation [Link](https://joi.dev/api/?v=17.6.0)
-- Youtube videos ([Joi validator](https://www.youtube.com/watch?v=_svzevhv4vg&t=5s), [bcrypt.js](https://www.youtube.com/watch?v=2jqok-WgelI&t=1181s))
+- joi documentation [Link](https://joi.dev/api/?v=17.6.0)
+- Youtube videos ([joi validator](https://www.youtube.com/watch?v=_svzevhv4vg&t=5s), [bcrypt.js](https://www.youtube.com/watch?v=2jqok-WgelI&t=1181s))

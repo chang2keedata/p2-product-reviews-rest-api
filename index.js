@@ -57,6 +57,7 @@ async function main() {
             'dustWaterproof': req.body.dustWaterproof,
             'connectors': req.body.connectors,
         })
+
         res.status(201).json({
             'message': 'Created successfully'
         });
@@ -68,7 +69,7 @@ async function main() {
         if(validator(validateParamsQuery,req.query,res)) return res;
 
         // PAGINATION
-        let { page = 1, limit = 2 } = req.query
+        let { page = 1, limit = 2 } = req.query;
         let criteria = {};
 
         if(req.query.type) {
@@ -137,6 +138,7 @@ async function main() {
                 'connectors': 1
             }
         }).limit(limit * 1).skip((page - 1) * limit).toArray();
+
         res.status(200).json({
             page, limit, result
         });
@@ -262,7 +264,10 @@ async function main() {
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
         
-               try {
+        // PAGINATION
+        let { page = 1, limit = 2 } = req.query;
+
+        try {
             const result = await db.collection('user').aggregate([
                 { $match: { _id: ObjectId(req.params.id)} },
                 { $lookup: {
@@ -277,25 +282,28 @@ async function main() {
                 { $project: {
                         'userAllReviews.brandModel': 1,
                         'userAllReviews.review': 1
-                }}
+                }},
+                { $skip: parseInt(page - 1) * limit },
+                { $limit: limit * 1 },
             ]).toArray();
             
-            // IF USER ID OR EMAIL NOT FOUND
+            // IF USER ID OR EMAIL OR REVIEW NOT FOUND
             if(!result || result.length === 0) throw err;
 
-            res.status(200).send(result);
+            res.status(200).json({
+                page, limit, result
+            });
         } catch(err) {
-            res.status(400).end('Any modifications are needed')
+            res.status(400).end('Any modifications are needed or no review')
         }
     })
 
     // EDIT THE REVIEW
     app.put('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
-        // PARAMS AND BODY ERROR HANDLING
+        // VALIDATE BODY
+        if(validator(validateReview,req.body,res)) return res;
+
         try {
-            // VALIDATE BODY
-            if(validator(validateReview,req.body,res)) return res;
-        
             const review = await db.collection('earphone').findOne({
                 '_id': ObjectId(req.params.id),
                 'review._id': ObjectId(req.params.reviewid)
@@ -319,6 +327,7 @@ async function main() {
                     'review.$.date': req.body.date ? new Date(req.body.date) : new Date()
                 }
             })
+
             res.status(200).json({
                 'message': 'Updated succesfully'
             });
@@ -425,11 +434,10 @@ async function main() {
 
     // UPDATE USER
     app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
-        // PARAMS AND BODY ERROR HANDLING
+        // VALIDATE BODY
+        if(validator(validateUserUpdate,req.body,res)) return res;
+
         try {
-            // VALIDATE BODY
-            if(validator(validateUserUpdate,req.body,res)) return res;
-        
             const user = await db.collection('user').findOne({
                 '_id': ObjectId(req.params.id)
             })
