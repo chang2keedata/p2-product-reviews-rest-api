@@ -14,7 +14,7 @@ app.use(cors());
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
 
-function checkIfAuthenticationJWT(req,res,next) {
+function jwtAuthentication(req,res,next) {
     if(req.headers.authorization) {
         const headers = req.headers.authorization;
         const token = headers.split(' ')[1];
@@ -41,7 +41,7 @@ async function main() {
     const db = await connect(MONGO_URI, DB_NAME);
 
     // ADD NEW PRODUCT
-    app.post('/add',[checkIfAuthenticationJWT],async function (req,res) {
+    app.post('/add',[jwtAuthentication],async function (req,res) {
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
@@ -64,7 +64,7 @@ async function main() {
     })
     
     // SEARCH FOR PRODUCT
-    app.get('/earphone',[checkIfAuthenticationJWT],async function(req,res){
+    app.get('/earphone',[jwtAuthentication],async function(req,res){
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
 
@@ -145,7 +145,7 @@ async function main() {
     })
 
     //UPDATE DETAILS OF PRODUCT
-    app.put('/earphone/:id',[checkIfAuthenticationJWT],async function(req,res){
+    app.put('/earphone/:id',[jwtAuthentication],async function(req,res){
         try {
             // VALIDATE BODY
             if(validator(validateProduct,req.body,res)) return res;
@@ -183,7 +183,7 @@ async function main() {
     })
 
     // DELETE PRODUCT
-    app.delete('/earphone/:id',[checkIfAuthenticationJWT],async function(req,res){
+    app.delete('/earphone/:id',[jwtAuthentication],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
        
@@ -204,7 +204,7 @@ async function main() {
     })
 
     // ADD PRODUCT REVIEW 
-    app.post('/earphone/:id/review',[checkIfAuthenticationJWT],async function(req,res){
+    app.post('/earphone/:id/review',[jwtAuthentication],async function(req,res){
         // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
@@ -235,7 +235,7 @@ async function main() {
     })
 
     // GET A REVIEW
-    app.get('/earphone/:id/review',[checkIfAuthenticationJWT],async function(req,res){
+    app.get('/earphone/:id/review',[jwtAuthentication],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
 
@@ -260,7 +260,7 @@ async function main() {
     })
 
     // EDIT THE REVIEW
-    app.put('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
+    app.put('/earphone/:id/review/:reviewid',[jwtAuthentication],async function(req,res){
         // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
@@ -298,7 +298,7 @@ async function main() {
     })
 
     // DELETE REVIEW
-    app.delete('/earphone/:id/review/:reviewid',[checkIfAuthenticationJWT],async function(req,res){
+    app.delete('/earphone/:id/review/:reviewid',[jwtAuthentication],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
@@ -325,7 +325,7 @@ async function main() {
     })
 
     // GET USER'S REVIEW FROM PRODUCT
-    app.get('/user/:id/:email/review',[checkIfAuthenticationJWT],async function(req,res){
+    app.get('/user/:id/:email/review',[jwtAuthentication],async function(req,res){
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
         
@@ -386,8 +386,7 @@ async function main() {
             'firstname': req.body.firstname,
             'lastname': req.body.lastname,
             'email': req.body.email,
-            'password': hashedPassword,
-            'comfirmPassword': hashedPassword
+            'password': hashedPassword
         })
         res.status(201).json({
             'message': `${req.body.email} is registered successfully`
@@ -433,7 +432,7 @@ async function main() {
     })
 
     // UPDATE USER
-    app.put('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
+    app.put('/user/:id',[jwtAuthentication],async function(req,res){
         // VALIDATE BODY
         if(validator(validateUserUpdate,req.body,res)) return res;
 
@@ -463,7 +462,7 @@ async function main() {
     })
 
     // DELETE USER
-    app.delete('/user/:id',[checkIfAuthenticationJWT],async function(req,res){
+    app.delete('/user/:id',[jwtAuthentication],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
