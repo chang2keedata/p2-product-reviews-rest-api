@@ -235,7 +235,7 @@ async function main() {
     })
 
     // GET A REVIEW
-    app.get('/earphone/:id/review',[jwtAuthentication],async function(req,res){
+    app.get('/earphone/:id/review',async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
 
