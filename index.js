@@ -64,7 +64,7 @@ async function main() {
     })
     
     // SEARCH FOR PRODUCT
-    app.get('/earphone',[jwtAuthentication],async function(req,res){
+    app.get('/earphone',async function(req,res){
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
 
