@@ -146,16 +146,16 @@ async function main() {
 
     // GET A PRODUCT
     app.get('/earphone/:id',async function(req,res){
-        try {
-            // VALIDATE BODY
-            if(validator(validateParamsQuery,req.params,res)) return res;
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
 
-            const earphone = await db.collection('earphone').findOne({
+        try {
+            const result = await db.collection('earphone').findOne({
                 '_id': ObjectId(req.params.id)
             })
 
             // EARPHONE ID NOT FOUND
-            if(earphone == null) throw err;
+            if(result === null) throw err;
 
             res.status(200).send(result);
         } catch(err) {
