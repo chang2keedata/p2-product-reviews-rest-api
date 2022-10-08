@@ -41,7 +41,7 @@ async function main() {
     const db = await connect(MONGO_URI, DB_NAME);
 
     // ADD NEW PRODUCT
-    app.post('/add',[jwtAuthentication],async function (req,res) {
+    app.post('/add',async function (req,res) {
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
@@ -145,7 +145,7 @@ async function main() {
     })
 
     //UPDATE DETAILS OF PRODUCT
-    app.put('/earphone/:id',[jwtAuthentication],async function(req,res){
+    app.put('/earphone/:id',async function(req,res){
         try {
             // VALIDATE BODY
             if(validator(validateProduct,req.body,res)) return res;
@@ -183,7 +183,7 @@ async function main() {
     })
 
     // DELETE PRODUCT
-    app.delete('/earphone/:id',[jwtAuthentication],async function(req,res){
+    app.delete('/earphone/:id',async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
        
@@ -204,7 +204,7 @@ async function main() {
     })
 
     // ADD PRODUCT REVIEW 
-    app.post('/earphone/:id/review',[jwtAuthentication],async function(req,res){
+    app.post('/earphone/:id/review',async function(req,res){
         // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
@@ -260,7 +260,7 @@ async function main() {
     })
 
     // EDIT THE REVIEW
-    app.put('/earphone/:id/review/:reviewid',[jwtAuthentication],async function(req,res){
+    app.put('/earphone/:id/review/:reviewid',async function(req,res){
         // VALIDATE BODY
         if(validator(validateReview,req.body,res)) return res;
 
@@ -298,7 +298,7 @@ async function main() {
     })
 
     // DELETE REVIEW
-    app.delete('/earphone/:id/review/:reviewid',[jwtAuthentication],async function(req,res){
+    app.delete('/earphone/:id/review/:reviewid',async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
         
@@ -325,7 +325,7 @@ async function main() {
     })
 
     // GET USER'S REVIEW FROM PRODUCT
-    app.get('/user/:id/:email/review',[jwtAuthentication],async function(req,res){
+    app.get('/user/:id/:email/review',async function(req,res){
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
         
