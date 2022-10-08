@@ -148,7 +148,7 @@ async function main() {
     app.get('/earphone/:id',async function(req,res){
         try {
             // VALIDATE BODY
-            if(validator(validateParamsQuery,req.body,res)) return res;
+            if(validator(validateParamsQuery,req.params,res)) return res;
 
             const earphone = await db.collection('earphone').findOne({
                 '_id': ObjectId(req.params.id)
