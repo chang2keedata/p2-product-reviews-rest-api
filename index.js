@@ -69,7 +69,7 @@ async function main() {
         if(validator(validateParamsQuery,req.query,res)) return res;
 
         // PAGINATION
-        let { page = 1, limit = 2 } = req.query;
+        let { page = 1, limit = 6 } = req.query;
         let criteria = {};
 
         if(req.query.type) {
