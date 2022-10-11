@@ -127,6 +127,7 @@ async function main() {
         const result = await db.collection('earphone').find(criteria, {
             'projection': {
                 '_id': 1,
+                'image': 1,
                 'brandModel': 1,
                 'type': 1,
                 'bluetooth': 1,
