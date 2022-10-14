@@ -254,7 +254,7 @@ async function main() {
         }
     })
 
-    // GET A REVIEW
+    // GET A PRODUCT REVIEW
     app.get('/earphone/:id/review',async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
@@ -350,7 +350,7 @@ async function main() {
         if(validator(validateParamsQuery,req.query,res)) return res;
         
         // PAGINATION
-        let { page = 1, limit = 2 } = req.query;
+        let { page = 1, limit = 6 } = req.query;
 
         try {
             const result = await db.collection('user').aggregate([
@@ -502,6 +502,16 @@ async function main() {
         }
     })
 
+    // GET CART
+    app.get('/cart',async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+
+        const result = await db.collection('cart').find({}).toArray();
+
+        res.status(200).json(result);
+    })
+
     // THE 404 ROUTE
     app.all('*',function(req,res) {
         res.status(404).end('Server could not find what was requested');
@@ -509,6 +519,6 @@ async function main() {
 }
 main();
 
-app.listen(process.env.PORT, function () {
+app.listen(process.env.PORT || 3000, function () {
     console.log('Server started')
 })
