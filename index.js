@@ -502,16 +502,6 @@ async function main() {
         }
     })
 
-    // GET CART
-    app.get('/cart',async function(req,res){
-        // VALIDATE PARAMS
-        if(validator(validateParamsQuery,req.params,res)) return res;
-
-        const result = await db.collection('cart').find({}).toArray();
-
-        res.status(200).json(result);
-    })
-
     // THE 404 ROUTE
     app.all('*',function(req,res) {
         res.status(404).end('Server could not find what was requested');
