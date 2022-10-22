@@ -69,7 +69,7 @@ async function main() {
         if(validator(validateParamsQuery,req.query,res)) return res;
 
         // PAGINATION
-        let { page = 1, limit = 6 } = req.query;
+        let { page = 1, limit = 20 } = req.query;
         let criteria = {};
 
         if(req.query.type) {
@@ -350,7 +350,7 @@ async function main() {
         if(validator(validateParamsQuery,req.query,res)) return res;
         
         // PAGINATION
-        let { page = 1, limit = 6 } = req.query;
+        let { page = 1, limit = 20 } = req.query;
 
         try {
             const result = await db.collection('user').aggregate([
