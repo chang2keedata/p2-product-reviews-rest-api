@@ -56,6 +56,7 @@ async function main() {
             'hours': req.body.hours,
             'dustWaterproof': req.body.dustWaterproof,
             'connectors': req.body.connectors,
+            'image': req.body.image,
         })
 
         res.status(201).json({
@@ -190,7 +191,8 @@ async function main() {
                     'color': req.body.color ? req.body.color : earphone.color,
                     'hours': req.body.hours ? req.body.hours : earphone.hours,
                     'dustWaterproof': req.body.dustWaterproof ? req.body.dustWaterproof : earphone.dustWaterproof,
-                    'connectors': req.body.connectors ? req.body.connectors : earphone.connectors
+                    'connectors': req.body.connectors ? req.body.connectors : earphone.connectors,
+                    'image': req.body.image ? req.body.image : earphone.image,
                 }
             })
 

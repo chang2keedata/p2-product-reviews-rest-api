@@ -19,7 +19,8 @@ const productSchema = Joi.object({
     color: Joi.array().items(Joi.string()).required(),
     hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}),
     dustWaterproof: Joi.boolean(),
-    connectors: Joi.string().regex(/^[a-z-]+$/).required()
+    connectors: Joi.string().regex(/^[a-z-]+$/).required(),
+    image: Joi.string().regex(/^[a-z0-9-/.:]+$/)
 })
 
 const paramsQuerySchema = Joi.object({
