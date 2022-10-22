@@ -1,6 +1,6 @@
 const Joi = require('joi');
-const positiveInt = Joi.number().integer().positive().required();
-const positiveNum =  Joi.number().positive().required();
+const positiveInt = Joi.number().integer().positive();
+const positiveNum =  Joi.number().positive();
 const alphanum = Joi.string().alphanum().required();
 const email = Joi.string().trim().email().regex(/^[a-z0-9-@._]+$/).required();
 const password = Joi.string().trim().min(6).required();
@@ -12,13 +12,13 @@ const validator = (schema) => (payload) => schema.validate(payload, {
 const productSchema = Joi.object({
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
-    earbuds: Joi.boolean().required(),
+    earbuds: Joi.boolean(),
     bluetooth: positiveNum.less(6),
-    price: positiveNum,
+    price: positiveNum.required(),
     stock: Joi.array().items(Joi.object({store: Joi.string(), qty: positiveInt})),
     color: Joi.array().items(Joi.string()).required(),
-    hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}).required(),
-    dustWaterproof: Joi.boolean().required(),
+    hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}),
+    dustWaterproof: Joi.boolean(),
     connectors: Joi.string().regex(/^[a-z-]+$/).required()
 })
 
