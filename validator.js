@@ -15,10 +15,13 @@ const productSchema = Joi.object({
     type: Joi.string().regex(/^[a-z-]+$/).required(),
     earbuds: Joi.boolean(),
     // bluetooth: positiveNum.less(6),
+    bluetooth: Joi.string().allow(null, ''),
     price: positiveNum.required(),
     // stock: Joi.array().items(Joi.object({store: Joi.string(), qty: positiveInt})),
+    stock: Joi.string().allow(null, ''),
     color: Joi.array().items(Joi.string()).required(),
     // hours: Joi.object({music: positiveInt, cableCharging: positiveInt, boxCharging: positiveInt.allow(0)}),
+    hours: Joi.string().allow(null, ''),
     dustWaterproof: Joi.boolean(),
     connectors: Joi.string().regex(/^[a-z-]+$/).required(),
     image: Joi.string().regex(/^[a-z0-9-/.:]+$/)
