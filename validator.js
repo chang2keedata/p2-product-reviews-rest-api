@@ -10,6 +10,7 @@ const validator = (schema) => (payload) => schema.validate(payload, {
 });
 
 const productSchema = Joi.object({
+    _id: alphanum,
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
     earbuds: Joi.boolean(),
@@ -40,6 +41,7 @@ const paramsQuerySchema = Joi.object({
 })
 
 const reviewSchema = Joi.object({
+    _id: alphanum,
     email: email,
     comments: Joi.string().required(),
     rating:  positiveInt.less(6)
@@ -60,6 +62,7 @@ const loginSchema = Joi.object({
 })
 
 const userUpdateSchema = Joi.object({
+    _id: alphanum,
     username: alphanum,
     firstname: alphanum,
     lastname: alphanum

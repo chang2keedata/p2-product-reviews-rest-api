@@ -60,6 +60,7 @@ async function main() {
         })
 
         res.status(201).json({
+            'result': result,
             'message': 'Created successfully'
         });
     })
@@ -185,11 +186,11 @@ async function main() {
                     'brandModel': req.body.brandModel ? req.body.brandModel : earphone.brandModel,
                     'type': req.body.type ? req.body.type : earphone.type,
                     'earbuds': req.body.earbuds ? req.body.earbuds : earphone.earbuds,
-                    'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
+                    // 'bluetooth': req.body.bluetooth ? req.body.bluetooth : earphone.bluetooth,
                     'price': req.body.price ? req.body.price : earphone.price,
-                    'stock': req.body.stock ? req.body.stock : earphone.stock,
+                    // 'stock': req.body.stock ? req.body.stock : earphone.stock,
                     'color': req.body.color ? req.body.color : earphone.color,
-                    'hours': req.body.hours ? req.body.hours : earphone.hours,
+                    // 'hours': req.body.hours ? req.body.hours : earphone.hours,
                     'dustWaterproof': req.body.dustWaterproof ? req.body.dustWaterproof : earphone.dustWaterproof,
                     'connectors': req.body.connectors ? req.body.connectors : earphone.connectors,
                     'image': req.body.image ? req.body.image : earphone.image,
@@ -197,6 +198,7 @@ async function main() {
             })
 
             res.status(200).json({
+                'result': result,
                 'message': 'Updated succesfully'
             });
         } catch(err) {
@@ -249,6 +251,7 @@ async function main() {
             if(result.modifiedCount === 0) throw err;
         
             res.status(201).json({
+                'result': result,
                 'message': 'Created successfully'
             })
         } catch(err) {
@@ -312,6 +315,7 @@ async function main() {
             })
 
             res.status(200).json({
+                'result': result,
                 'message': 'Updated succesfully'
             });
         } catch(err) {
@@ -411,6 +415,7 @@ async function main() {
             'password': hashedPassword
         })
         res.status(201).json({
+            'result': result,
             'message': `${req.body.email} is registered successfully`
         });
     })
@@ -476,6 +481,7 @@ async function main() {
                 }
             })
             res.status(200).json({
+                'result': result,
                 'message': 'Updated succesfully'
             });
         } catch(err) {
