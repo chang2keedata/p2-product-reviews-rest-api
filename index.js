@@ -45,7 +45,7 @@ async function main() {
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
-        await db.collection('earphone').insertOne({
+        const result = await db.collection('earphone').insertOne({
             'brandModel': req.body.brandModel,
             'type': req.body.type,
             'earbuds': req.body.earbuds,
@@ -197,6 +197,10 @@ async function main() {
                 }
             })
 
+            const result = await db.collection('earphone').findOne({
+                '_id': ObjectId(req.params.id)
+            })
+
             res.status(200).json({
                 'result': result,
                 'message': 'Updated succesfully'
@@ -302,7 +306,7 @@ async function main() {
             // NO IDs FOUND
             if(!review) throw err;
 
-            const result = await db.collection('earphone').updateOne({
+            await db.collection('earphone').updateOne({
                 '_id': ObjectId(req.params.id),
                 'review._id': ObjectId(req.params.reviewid)
             },{
@@ -311,6 +315,15 @@ async function main() {
                     'review.$.comments': req.body.comments ? req.body.comments : review.comments,
                     'review.$.rating': req.body.rating ? req.body.rating : review.rating,
                     'review.$.date': req.body.date ? new Date(req.body.date) : new Date()
+                }
+            })
+
+            const result = await db.collection('earphone').findOne({
+                '_id': ObjectId(req.params.id),
+                'review._id': ObjectId(req.params.reviewid)
+            },{
+                'projection': {
+                    'review.$': 1,
                 }
             })
 
@@ -414,8 +427,8 @@ async function main() {
             'email': req.body.email,
             'password': hashedPassword
         })
+
         res.status(201).json({
-            'result': result,
             'message': `${req.body.email} is registered successfully`
         });
     })
@@ -480,6 +493,11 @@ async function main() {
                     'lastname': req.body.lastname ? req.body.lastname : user.lastname
                 }
             })
+
+            const result = await db.collection('user').findOne({
+                '_id': ObjectId(req.params.id)
+            })
+
             res.status(200).json({
                 'result': result,
                 'message': 'Updated succesfully'
@@ -495,7 +513,7 @@ async function main() {
         if(validator(validateParamsQuery,req.params,res)) return res;
         
         try {
-            let result = await db.collection('user').deleteOne({
+            const result = await db.collection('user').deleteOne({
                 '_id': ObjectId(req.params.id)
             })
             

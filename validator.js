@@ -12,7 +12,8 @@ const validator = (schema) => (payload) => schema.validate(payload, {
 const productSchema = Joi.object({
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
-    earbuds: Joi.boolean(),
+    // earbuds: Joi.boolean(),
+    earbuds: Joi.string().allow(null, ''),
     // bluetooth: positiveNum.less(6),
     bluetooth: Joi.string().allow(null, ''),
     price: positiveNum.required(),
