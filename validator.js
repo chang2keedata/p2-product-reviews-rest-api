@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const positiveInt = Joi.number().integer().positive();
 const positiveNum =  Joi.number().positive();
-const alphanum = Joi.string().alphanum().required();
+const alphanum = Joi.string().alphanum();
 const email = Joi.string().trim().email().regex(/^[a-z0-9-@._]+$/).required();
 const password = Joi.string().trim().min(6).required();
 
@@ -10,7 +10,6 @@ const validator = (schema) => (payload) => schema.validate(payload, {
 });
 
 const productSchema = Joi.object({
-    _id: alphanum,
     brandModel: Joi.string().regex(/^[a-zA-Z0-9 ]+$/).required(),
     type: Joi.string().regex(/^[a-z-]+$/).required(),
     earbuds: Joi.boolean(),
