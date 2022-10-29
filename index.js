@@ -7,12 +7,14 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const { validateProduct, validateParamsQuery, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
 const bcrypt = require('bcryptjs');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.json());
 app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
+const YOUR_DOMAIN = process.env.DOMAIN;
 
 function jwtAuthentication(req,res,next) {
     if(req.headers.authorization) {
@@ -402,6 +404,22 @@ async function main() {
         }
     })
 
+    // GET USERS
+    app.get('/user',async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+
+        const result = await db.collection('earphone').find({},{
+            'projection': {
+                '_id': 1,
+                'username': 1,
+                'email': 1
+            }
+        }).toArray()
+
+        res.status(200).send(result);
+    })
+
     // SIGNUP USER
     app.post('/signup',async function(req,res){
         // VALIDATE BODY
@@ -527,6 +545,50 @@ async function main() {
             res.status(400).end('Any modifications are needed')
         }
     })
+
+    // CHECKOUT
+    // app.post('/checkout', async function(req,res) {
+        
+    //     const lineItems = [];
+    //     for (let item of req.body.items) {
+    //         // console.log(item._id)
+    //         // find the item by its id (note: should be from mongodb for a real project)
+    //         // const product = products.find(p => p._id == item._id);
+
+    //         // const product = await db.collection('earphone').findOne({'_id': req.body.items._id})
+                        
+    //         // create the line item
+    //         const lineItem = {
+    //             "quantity": item.quantity,
+    //             "price_data": {
+    //                 "product_data": {
+    //                     "name": product.brandModel,
+    //                     "metadata": {
+    //                         "_id": product._id
+    //                     }
+    //                 },
+    //                 "unit_amount_decimal": product.price,
+    //                 "currency": "SGD"
+    //             },
+    //         };
+    //         lineItems.push(lineItem)
+    //     }
+    //     res.json(lineItems)
+            
+    //     // create the stripe session
+    //     const stripeSession = await stripe.checkout.sessions.create({
+    //         line_items: lineItems,
+    //         payment_method_types: ['card'],
+    //         mode: 'payment',
+    //         success_url: `${YOUR_DOMAIN}/success`,
+    //         cancel_url: `${YOUR_DOMAIN}/cancel`,
+    //     });
+
+    //     res.json({
+    //         'sessionId': stripeSession.id,
+    //         'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
+    //     })
+    // })
 
     // THE 404 ROUTE
     app.all('*',function(req,res) {
