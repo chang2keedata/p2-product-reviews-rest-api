@@ -409,7 +409,7 @@ async function main() {
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
 
-        const result = await db.collection('earphone').find({},{
+        const result = await db.collection('user').find({},{
             'projection': {
                 '_id': 1,
                 'username': 1,
@@ -417,7 +417,7 @@ async function main() {
             }
         }).toArray()
 
-        res.status(200).send(result);
+        res.status(200).json(result);
     })
 
     // SIGNUP USER
