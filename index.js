@@ -7,14 +7,14 @@ const app = express();
 const jwt = require('jsonwebtoken');
 const { validateProduct, validateParamsQuery, validateReview, validateSignup, validateLogin, validateUserUpdate, } = require('./validator');
 const bcrypt = require('bcryptjs');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 app.use(express.json());
 app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
-const YOUR_DOMAIN = process.env.DOMAIN;
+// const YOUR_DOMAIN = process.env.DOMAIN;
 
 function jwtAuthentication(req,res,next) {
     if(req.headers.authorization) {
@@ -23,14 +23,18 @@ function jwtAuthentication(req,res,next) {
 
         jwt.verify(token, process.env.TOKEN_SECRET, function(err, tokenData){
             if(err) {
-                res.sendStatus(403);
+                res.status(403).json({
+                    'error': "Your access token is invalid"
+                })
                 return;
             }
-            req.student = tokenData;
+            req.user = tokenData;
             next();
         })
     } else {
-        res.sendStatus(403);
+        res.status(403).json({
+            'error': "You must provide an access token to access this route"
+        })
     }
 }
 
@@ -43,7 +47,7 @@ async function main() {
     const db = await connect(MONGO_URI, DB_NAME);
 
     // ADD NEW PRODUCT
-    app.post('/add',async function (req,res) {
+    app.post('/add',[jwtAuthentication],async function (req,res) {
         // VALIDATE BODY
         if(validator(validateProduct,req.body,res)) return res;
 
@@ -72,81 +76,85 @@ async function main() {
         // VALIDATE QUERY
         if(validator(validateParamsQuery,req.query,res)) return res;
 
-        // PAGINATION
-        let { page = 1, limit = 20 } = req.query;
-        let criteria = {};
-
-        if(req.query.type) {
-            criteria.type = {
-                '$regex': req.query.type, '$options': 'i'
-            }
-        }
-
-        if(req.query.otherType) {
-            criteria.type = {
-                '$ne': req.query.otherType
-            }
-        }
-
-        if(req.query.otherMusicHours) {
-            criteria['hours.music'] = {
-                '$not': {
-                    '$eq': parseInt(req.query.otherMusicHours)
+        try {   
+            // PAGINATION
+            let { page = 1, limit = 20 } = req.query;
+            let criteria = {};
+    
+            if(req.query.type) {
+                criteria.type = {
+                    '$regex': req.query.type, '$options': 'i'
                 }
             }
-        }
-
-        if(req.query.store) {
-            criteria.stock = {
-                '$elemMatch': {
-                    'store': req.query.store
+    
+            if(req.query.otherType) {
+                criteria.type = {
+                    '$ne': req.query.otherType
                 }
             }
-        }
-
-        if(req.query.color) {
-            criteria.color = {
-                '$in': [req.query.color]
+    
+            if(req.query.otherMusicHours) {
+                criteria['hours.music'] = {
+                    '$not': {
+                        '$eq': parseInt(req.query.otherMusicHours)
+                    }
+                }
             }
-        }
-
-        if(req.query.otherColor) {
-            criteria.color = {
-                '$nin': [req.query.otherColor]
+    
+            if(req.query.store) {
+                criteria.stock = {
+                    '$elemMatch': {
+                        'store': req.query.store
+                    }
+                }
             }
-        }
-
-        if(req.query.min_price) {
-            criteria.price = {
-                '$gte': parseInt(req.query.min_price)
+    
+            if(req.query.color) {
+                criteria.color = {
+                    '$in': [req.query.color]
+                }
             }
-        }
-
-        if(req.query.max_price) {
-            criteria.price = {
-                '$lte': parseInt(req.query.max_price)
+    
+            if(req.query.otherColor) {
+                criteria.color = {
+                    '$nin': [req.query.otherColor]
+                }
             }
-        }
-
-        const result = await db.collection('earphone').find(criteria, {
-            'projection': {
-                '_id': 1,
-                'image': 1,
-                'brandModel': 1,
-                'type': 1,
-                'bluetooth': 1,
-                'price': 1,
-                'stock': 1,
-                'color': 1,
-                'hours': 1,
-                'dustWaterproof': 1,
-                'connectors': 1
+    
+            if(req.query.min_price) {
+                criteria.price = {
+                    '$gte': parseInt(req.query.min_price)
+                }
             }
-        }).limit(limit * 1).skip((page - 1) * limit).toArray();
-
-        res.status(200).json({
-            page, limit, result
-        });
+    
+            if(req.query.max_price) {
+                criteria.price = {
+                    '$lte': parseInt(req.query.max_price)
+                }
+            }
+    
+            const result = await db.collection('earphone').find(criteria, {
+                'projection': {
+                    '_id': 1,
+                    'image': 1,
+                    'brandModel': 1,
+                    'type': 1,
+                    'bluetooth': 1,
+                    'price': 1,
+                    'stock': 1,
+                    'color': 1,
+                    'hours': 1,
+                    'dustWaterproof': 1,
+                    'connectors': 1
+                }
+            }).limit(limit * 1).skip((page - 1) * limit).toArray();
+    
+            res.status(200).json({
+                page, limit, result
+            });
+        } catch(err) {
+            res.status(404).end('Server could not find what was requested');
+        }
     })
 
     // GET A PRODUCT
@@ -169,7 +177,7 @@ async function main() {
     })
 
     // UPDATE DETAILS OF PRODUCT
-    app.put('/earphone/:id',async function(req,res){
+    app.put('/earphone/:id',[jwtAuthentication],async function(req,res){
         try {
             // VALIDATE BODY
             if(validator(validateProduct,req.body,res)) return res;
@@ -213,7 +221,7 @@ async function main() {
     })
 
     // DELETE PRODUCT
-    app.delete('/earphone/:id',async function(req,res){
+    app.delete('/earphone/:id',[jwtAuthentication],async function(req,res){
         // VALIDATE PARAMS
         if(validator(validateParamsQuery,req.params,res)) return res;
        
@@ -420,6 +428,31 @@ async function main() {
         res.status(200).json(result);
     })
 
+    // GET A USER
+    app.get('/user/:id',async function(req,res){
+        // VALIDATE PARAMS
+        if(validator(validateParamsQuery,req.params,res)) return res;
+
+        try {
+            const result = await db.collection('user').findOne({
+                '_id': ObjectId(req.params.id)
+            },{
+                'projection': {
+                    '_id': 1,
+                    'username': 1,
+                    'email': 1
+                }
+            })
+
+            // USER ID NOT FOUND
+            if(result === null) throw err;
+
+            res.status(200).send(result);
+        } catch(err) {
+            res.status(400).end('Any modifications are needed')
+        }
+    })
+
     // SIGNUP USER
     app.post('/signup',async function(req,res){
         // VALIDATE BODY
@@ -478,11 +511,13 @@ async function main() {
                 'firstname': req.body.firstname,
                 'lastname': req.body.lastname
             },process.env.TOKEN_SECRET,{
-                'expiresIn': '1h'
+                'expiresIn': '30m'
             })
             res.json({
-                'User ID': user._id,
-                'Access Token': token
+                '_id': user._id,
+                'username': user.username,
+                'email': user.email,
+                'token': token
             })
         } else {
             res.sendStatus(401)
