@@ -421,6 +421,8 @@ async function main() {
             'projection': {
                 '_id': 1,
                 'username': 1,
+                'firstname': 1,
+                'lastname': 1,
                 'email': 1
             }
         }).toArray()
@@ -440,6 +442,8 @@ async function main() {
                 'projection': {
                     '_id': 1,
                     'username': 1,
+                    'firstname': 1,
+                    'lastname': 1,
                     'email': 1
                 }
             })
@@ -516,6 +520,8 @@ async function main() {
             res.json({
                 '_id': user._id,
                 'username': user.username,
+                'firstname': user.firstname,
+                'lastname': user.lastname,
                 'email': user.email,
                 'token': token
             })
@@ -543,7 +549,9 @@ async function main() {
                 '$set': {
                     'username': req.body.username ? req.body.username : user.username,
                     'firstname': req.body.firstname ? req.body.firstname : user.firstname,
-                    'lastname': req.body.lastname ? req.body.lastname : user.lastname
+                    'lastname': req.body.lastname ? req.body.lastname : user.lastname,
+                    'email': req.body.email ? req.body.email : user.email,
+                    'password': req.body.password ? req.body.password : user.password
                 }
             })
 
