@@ -549,9 +549,7 @@ async function main() {
                 '$set': {
                     'username': req.body.username ? req.body.username : user.username,
                     'firstname': req.body.firstname ? req.body.firstname : user.firstname,
-                    'lastname': req.body.lastname ? req.body.lastname : user.lastname,
-                    'email': req.body.email ? req.body.email : user.email,
-                    'password': req.body.password ? req.body.password : user.password
+                    'lastname': req.body.lastname ? req.body.lastname : user.lastname
                 }
             })
 

@@ -57,7 +57,7 @@ const signupSchema = Joi.object({
     lastname: alphanum,
     email: email,
     password: password,
-    comfirmPassword: Joi.ref('password')
+    // comfirmPassword: Joi.ref('password')
 })
 
 const loginSchema = Joi.object({
@@ -70,9 +70,6 @@ const userUpdateSchema = Joi.object({
     username: alphanum.required(),
     firstname: alphanum,
     lastname: alphanum,
-    email: email,
-    password: password,
-    comfirmPassword: Joi.ref('password')
 })
 
 exports.validateSignup = validator(signupSchema);
