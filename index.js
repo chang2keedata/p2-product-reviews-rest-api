@@ -137,6 +137,7 @@ async function main() {
                 'projection': {
                     '_id': 1,
                     'image': 1,
+                    'earbuds': 1,
                     'brandModel': 1,
                     'type': 1,
                     'bluetooth': 1,
