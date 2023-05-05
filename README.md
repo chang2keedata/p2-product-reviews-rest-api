@@ -1,7 +1,7 @@
 # TGCProject2 - Bluetooth Earphone REST API
 
 ## Intro
-This is a restful API designed for a project on bluetooth earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on Heroku ([Link Here](https://tgc-earphone-review-rest-api.herokuapp.com "https://tgc-earphone-review-rest-api.herokuapp.com")).
+This is a restful API designed for a project on bluetooth earphone. This API was created using Nodejs, Expressjs, MongoDB, and hosted on [Render](https://p2-product-reviews-rest-api.onrender.com/ "https://p2-product-reviews-rest-api.onrender.com/").
 
 User are able to search, read, edit, delete the earphone post with login authentication (email and password). Although our server is built encryption system to hash all the users' password, please don't use any online banking related password. 
 
@@ -28,7 +28,7 @@ Any bluetooth user can contirbute their user experiences or anyone who need a sh
 **Platform and Software**
 - `Github` an Internet hosting service for software development and version control using Git
 - `Gitpod` a platform for remote software development
-- `Heroku` a cloud platform helps developers to build, run, and operate applications entirely
+- `Render` a free cloud platform helps developers to build, run, and operate applications entirely
 - `Advanced REST Client` a API testing tool
 
 ## Sample Document
@@ -283,9 +283,9 @@ User collection template
 **Body & Expected Response** | <img src="images/noresult.png" width=50%>
 
 ## Credits
-- Trent Global College & Tutor Paul [Link](https://www.trentglobal.edu.sg/diplomainsoftwaredevelopment/)
-- Stack Overflow for coding issues [Link](https://stackoverflow.com/questions/69416996/why-does-my-mongodb-nodejs-driver-query-on-aggregate-lookup-not-return-results)
+- [Trent Global College](https://www.trentglobal.edu.sg/) & Tutor [Paul](https://github.com/kunxin-chor)
+- [Stack Overflow for coding issues](https://stackoverflow.com/questions/69416996/why-does-my-mongodb-nodejs-driver-query-on-aggregate-lookup-not-return-results)
 - MongoDB documentation [$unwind](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/)
 - StackChief [$lookup](https://www.stackchief.com/tutorials/%24lookup%20Examples%20%7C%20MongoDB)
-- joi documentation [Link](https://joi.dev/api/?v=17.6.0)
+- [joi documentation](https://joi.dev/api/?v=17.6.0)
 - Youtube videos ([joi validator](https://www.youtube.com/watch?v=_svzevhv4vg&t=5s), [bcrypt.js](https://www.youtube.com/watch?v=2jqok-WgelI&t=1181s))
